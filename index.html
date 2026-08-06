@@ -559,10 +559,15 @@ function keystream(k,n,len){const o=[];let c=0;while(o.length<len){const bl=hexT
 function randomKey(){let s='';for(let i=0;i<8;i++)s+=('00000000'+Math.floor(Math.random()*0xffffffff).toString(16)).slice(-8);return s;}
 
 /* ===================== Winky crypto — Phase 1 ===================== */
-/* Central switches. Keep writeV3=false and kdfActive=false until the WATCH
-   client is updated to understand v3 + the strong KDF. Flip both to true to
-   activate authenticated encryption (HMAC) and the hardened PIN derivation. */
-const WC_CRYPTO = { readV3:true, writeV3:true, kdfActive:true, kdfIters:3000, tagLen:16, nonceLen:16 };
+/* ROLLBACK to the simpler pre-v3 scheme (mirrors the watch client):
+     writeV3=false  -> new messages are written as v2 (XOR keystream + integrity
+                       marker), lighter than v3 (no per-message HMAC).
+     readV3=true    -> v3 messages already sent stay readable (no "unable to
+                       decrypt" on existing data).
+     kdfActive=false-> keybag key is the simple legacy key again; the strong KDF
+                       key is still kept for READING (see setupKb/kbDecrypt), so
+                       entries saved while the KDF was on remain decryptable. */
+const WC_CRYPTO = { readV3:true, writeV3:false, kdfActive:false, kdfIters:3000, tagLen:16, nonceLen:16 };
 try{ const _f=LS.get('wc_crypto_flags',''); if(_f){ Object.assign(WC_CRYPTO, JSON.parse(_f)); } }catch(e){}
 window.WC_CRYPTO = WC_CRYPTO;
 
@@ -596,7 +601,7 @@ const __decMemo=new Map();
 function __memoKey(k,pl){ return (k||'')+'\u0000'+pl; }
 
 /* Keybag key handling (active + legacy for smooth, non-breaking migration). */
-function setupKb(nick,pin,saltHex){ LS.set('wc_salt',saltHex||''); const legacy=hashPin(String(nick).toLowerCase()+':kb',pin); LS.set('wc_kb_legacy',legacy); const useStrong=!!(WC_CRYPTO.kdfActive&&saltHex); const active=useStrong?deriveKbStrong(nick,pin,saltHex):legacy; LS.set('wc_kb',active);
+function setupKb(nick,pin,saltHex){ LS.set('wc_salt',saltHex||''); const legacy=hashPin(String(nick).toLowerCase()+':kb',pin); LS.set('wc_kb_legacy',legacy); if(saltHex){ try{ LS.set('wc_kb_strong', deriveKbStrong(nick,pin,saltHex)); }catch(e){} } const useStrong=!!(WC_CRYPTO.kdfActive&&saltHex); const active=useStrong?deriveKbStrong(nick,pin,saltHex):legacy; LS.set('wc_kb',active);
   /* Session marker set on EVERY fresh PIN login so the boot gate never loops:
    *   '2' = strong KDF key derived (salt confirmed on server, cross-device safe)
    *   '1' = legacy key (salt unavailable) — still fully recoverable from nick+PIN
@@ -620,7 +625,7 @@ async function setupKbLogin(u,pin){
   setupKb(u.nickname,pin,salt); // salt==='' => legacy-only, fully cross-device recoverable
 }
 /* Decrypt a keybag entry trying the active key, then the legacy key. */
-function kbDecrypt(enc){ const a=kbKey(); let out=decrypt(a,enc); if(out&&out!=='[locked]'&&!isBadKey(out)) return out; const lg=LS.get('wc_kb_legacy',''); if(lg&&lg!==a){ out=decrypt(lg,enc); } return out; }
+function kbDecrypt(enc){ const a=kbKey(); let out=decrypt(a,enc); if(out&&out!=='[locked]'&&!isBadKey(out)) return out; const lg=LS.get('wc_kb_legacy',''); if(lg&&lg!==a){ out=decrypt(lg,enc); if(out&&out!=='[locked]'&&!isBadKey(out)) return out; } const st=LS.get('wc_kb_strong',''); if(st&&st!==a&&st!==lg){ out=decrypt(st,enc); if(out&&out!=='[locked]'&&!isBadKey(out)) return out; } return out; }
 
 const CRYPT_MARK='\u0001WK1\u0001';
 const BADKEY='\u0000WKBADKEY\u0000';
@@ -711,7 +716,7 @@ async function refreshToken(){
 }
 function getProfile(){try{return JSON.parse(LS.get('wc_profile','')||'null');}catch(e){return null;}}
 function setProfile(p){LS.set('wc_profile',JSON.stringify(p));}
-function clearAllLocal(){['wc_profile','wc_kb','wc_kb_legacy','wc_salt','wc_kdf','wc_keys','wc_keys_hist','wc_read','wc_auth','wc_grpseen','wc_dead_dm'].forEach(LS.del);}
+function clearAllLocal(){['wc_profile','wc_kb','wc_kb_legacy','wc_kb_strong','wc_salt','wc_kdf','wc_keys','wc_keys_hist','wc_read','wc_auth','wc_grpseen','wc_dead_dm'].forEach(LS.del);}
 function keyMap(){try{return JSON.parse(LS.get('wc_keys','')||'{}');}catch(e){return {};}}
 function keyForUser(n){return keyMap()[String(n).toLowerCase()]||null;}
 function setKeyForUser(n,h){const m=keyMap();m[String(n).toLowerCase()]=h;LS.set('wc_keys',JSON.stringify(m));}
