@@ -1,0 +1,51 @@
+{
+  "configVersion": "v3",
+  "app": {
+    "appId": 1122101,
+    "appName": "Winky Community",
+    "appType": "app",
+    "version": { "code": 1, "name": "1.0.0" },
+    "icon": "icon.png",
+    "vender": "you",
+    "description": "Winky Community — social da polso: chat globale, messaggi diretti cifrati, gruppi, immagini e audio"
+  },
+  "permissions": [ "data:os.device.info", "device:os.local_storage", "device:os.bt_transfer_file" ],
+  "runtime": {
+    "apiVersion": { "compatible": "3.0.0", "target": "3.0.0", "minVersion": "3.0" }
+  },
+  "targets": {
+    "default": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/gallery/index",
+            "page/gallery/login",
+            "page/gallery/global-chat",
+            "page/gallery/dm-list",
+            "page/gallery/dm-thread",
+            "page/gallery/user-profile",
+            "page/gallery/dm-requests",
+            "page/gallery/blocked",
+            "page/gallery/group-list",
+            "page/gallery/group-chat",
+            "page/gallery/group-manage",
+            "page/gallery/group-invites",
+            "page/gallery/profile"
+          ]
+        },
+        "app-side": { "path": "app-side/index" },
+        "setting": { "path": "setting/index" }
+      },
+      "platforms": [
+        { "st": "r", "dw": 480 },
+        { "st": "s", "dw": 390 },
+        { "st": "b", "dw": 194 }
+      ]
+    }
+  },
+  "i18n": {
+    "en-US": { "appName": "Winky Community" },
+    "it-IT": { "appName": "Winky Community" }
+  },
+  "defaultLanguage": "en-US"
+}

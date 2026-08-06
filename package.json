@@ -1,0 +1,8 @@
+{
+  "name": "winky-community",
+  "version": "1.0.0",
+  "description": "Winky Community — a Discord/Telegram-style social for your wrist (Zepp OS).",
+  "private": true,
+  "dependencies": { "@zeppos/zml": "^0.0.24" },
+  "devDependencies": { "@zeppos/device-types": "latest" }
+}
