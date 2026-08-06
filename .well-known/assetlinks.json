@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.winky.community",
+        "sha256_cert_fingerprints": ["68:C2:8C:DD:BD:06:4D:51:D2:2E:EB:FB:13:8F:20:FD:16:91:0F:45:74:FF:D0:6D:DC:94:F9:D0:4F:53:8C:F6"]
+      }
+    }]
