@@ -182,6 +182,7 @@ views.pkGame=function(p){
     // due to perspective). It's revealed the instant the shot flies. Attacker POV:
     // the ball at the striker's feet is correct, so show it.
     ball.style.opacity=(POV==='keeper')?'0':'1';
+    try{ ball.style.zIndex=''; }catch(e){}  // restore default depth for the next shot
     keeper.style.transition='none'; keeper.classList.add('idle'); keeper.style.transform='';
     striker.classList.remove('kick'); striker.classList.add('idle'); striker.style.transform='';
     netFlash.classList.remove('scored'); netBall.classList.remove('show'); netBall.style.opacity='0';
@@ -210,6 +211,10 @@ views.pkGame=function(p){
   function flyBallKeeper(dir,saved){
     if(!geom) computeGeom();
     ball.style.opacity='1'; // reveal the ball now that the shot is being taken
+    // Depth: on a SAVE the keeper's body blocks the ball, so it must stay BEHIND
+    // the keeper (z-index below him). On a GOAL it passes him, so it goes in FRONT.
+    // (keeper .kpov z-index is 5.)
+    ball.style.zIndex = saved ? '4' : '6';
     const st=stage.getBoundingClientRect(); const br=ball.getBoundingClientRect();
     const bx=br.left+br.width/2-st.left, by=br.top+br.height/2-st.top;
     const tX=geom.sw*(dir==='L'?0.30:dir==='R'?0.70:0.5), tY=geom.sh*0.88;
