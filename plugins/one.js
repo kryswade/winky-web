@@ -344,7 +344,8 @@ views.oneGame=function(p){
     var cc=$('colorChip'); cc.textContent=T2('color')+': '+colName(st.color); cc.style.background=(COLHEX[st.color]||'#333'); cc.style.color=(st.color==='Y'?'#5a4600':'#fff');
     var hand=$('hand'); hand.innerHTML='';
     st.hands[me].forEach(function(code){ var playable=meTurn&&canPlay(code,st.color,top); var slot=el2('div','slot'+(playable?' playable':'')); var d=cardEl(code,''); if(!playable){ d.classList.add('disabled'); } else { d.onclick=function(){ tryPlay(code); }; } slot.appendChild(d); hand.appendChild(slot); });
-    $('drawBtn').disabled=!meTurn||!!st.mustPlay; $('drawBtn').classList.toggle('hidden',decide4);
+    if(!meTurn) myMustPlay=false; // clear stale local flag whenever it isn't my turn
+    $('drawBtn').disabled=!meTurn||myMustPlay; $('drawBtn').classList.toggle('hidden',decide4);
     var canReachOne=st.hands[me].length===2 && st.hands[me].some(function(c){return canPlay(c,st.color,top);});
     $('oneBtn').classList.toggle('hidden', !(meTurn&&canReachOne));
     var anyOpp1=false; st.players.forEach(function(slot){ if(slot!==me&&!(st.mode==='one2'&&st.team[slot]===st.team[me])&&st.hands[slot].length===1&&!st.saidOne[slot]) anyOpp1=true; });
@@ -353,14 +354,16 @@ views.oneGame=function(p){
     setStatus();
   }
   ACTIVE={ paint:paint }; // let verbatim BACKIMG/ICON onload repaint
+  var myMustPlay=false; // LOCAL only — never serialized into the shared row, so
+                        // it can never leave the other player's controls disabled.
 
   function pushState(){ st.seq=(st.seq||0)+1; actedSeq=st.seq; lastSeq=st.seq; G.state=st; try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:st,updated_at:new Date().toISOString()}}); }catch(e){} paint(); }
   function chooseColor(cb){ var bg=el2('div','modalbg'); var box=el2('div','modal'); box.appendChild(el2('div',null,T2('chooseColor'))); var row=el2('div','colors'); ['R','G','B','Y'].forEach(function(c){ var b=document.createElement('button'); b.style.background=COLHEX[c]; b.onclick=function(){ bg.remove(); cb(c); }; row.appendChild(b); }); box.appendChild(row); bg.appendChild(box); root.appendChild(bg); }
   function tryPlay(code){ if(!st||curSlot(st)!==meSlot()||st.winner)return; var top=st.discard[st.discard.length-1]; if(!canPlay(code,st.color,top)){ toast(T2('cantPlay')); return; } var k=cardKind(code);
-    if(k==='wild'||k==='wild4'){ var prev=st.color; chooseColor(function(c){ if(k==='wild4')st.prev4=prev; st.color=c; st.mustPlay=false; flash(cardShort(code)); playCard(st,meSlot(),code); pushState(); }); }
-    else { st.mustPlay=false; flash(cardShort(code)); playCard(st,meSlot(),code); pushState(); } }
-  function doDraw(){ if(!st||curSlot(st)!==meSlot()||st.winner||st.mustPlay)return; var g=drawCards(st,1); st.hands[meSlot()]=st.hands[meSlot()].concat(g); var top=st.discard[st.discard.length-1];
-    if(g.length&&g[0]&&canPlay(g[0],st.color,top)){ st.mustPlay=true; st.msg=T2('drewPlay'); pushState(); } else { st.turnIdx=norm(st,st.turnIdx+st.dir); st.msg=T2('drew'); st.saidOne[meSlot()]=false; pushState(); } }
+    if(k==='wild'||k==='wild4'){ var prev=st.color; chooseColor(function(c){ if(k==='wild4')st.prev4=prev; st.color=c; myMustPlay=false; flash(cardShort(code)); playCard(st,meSlot(),code); pushState(); }); }
+    else { myMustPlay=false; flash(cardShort(code)); playCard(st,meSlot(),code); pushState(); } }
+  function doDraw(){ if(!st||curSlot(st)!==meSlot()||st.winner||myMustPlay)return; var g=drawCards(st,1); st.hands[meSlot()]=st.hands[meSlot()].concat(g); var top=st.discard[st.discard.length-1];
+    if(g.length&&g[0]&&canPlay(g[0],st.color,top)){ myMustPlay=true; st.msg=T2('drewPlay'); pushState(); } else { myMustPlay=false; st.turnIdx=norm(st,st.turnIdx+st.dir); st.msg=T2('drew'); st.saidOne[meSlot()]=false; pushState(); } }
   function sayOne(){ if(!st)return; st.saidOne[meSlot()]=true; flash('ONE!'); pushState(); }
   function doCatch(){ if(!st)return; var me=meSlot(); for(var i=0;i<st.players.length;i++){ var slot=st.players[i]; if(slot===me)continue; if(st.mode==='one2'&&st.team[slot]===st.team[me])continue; if(st.hands[slot].length===1&&!st.saidOne[slot]){ st.hands[slot]=st.hands[slot].concat(drawCards(st,2)); st.msg=T2('caught',nameOf(st,slot)); flash(T2('catch')); pushState(); return; } } }
   function acc4(){ if(!st||!st.pending4)return; resolve4(st,'accept'); pushState(); }
@@ -377,6 +380,15 @@ views.oneGame=function(p){
     if(r.status!=='active'){ $('gStatus').textContent=T2('waitAccept'); return; }
     if(!r.state){ $('gStatus').textContent=T2('waitOpp'); return; }
     if(r.state.seq!==lastSeq){ st=r.state; G.state=st; lastSeq=st.seq; paint(); if(st.winner){ endGame(); return; } }
+    else if(st){
+      // WATCHDOG: even without a seq change, if it's MY turn (or a +4 decision is
+      // aimed at me), re-run paint so my controls are guaranteed live. This
+      // self-heals any stuck state (e.g. after a +4 challenge) instead of
+      // freezing the game for both players.
+      var meNow=(curSlot(st)===meSlot())&&!st.winner;
+      var decideNow=!!(st.pending4&&st.pending4.target===meSlot()&&!st.winner);
+      if(meNow||decideNow) paint();
+    }
     hostDrive();
   }
   function tick(){ try{ rest('/game_challenges?id=eq.'+p.id+'&select=*').then(function(rows){ applyRow(rows&&rows[0]); }).catch(function(){}); }catch(e){} }
