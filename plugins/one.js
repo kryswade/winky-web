@@ -69,7 +69,7 @@ function colName(c){ return T2({R:'colRed',G:'colGreen',B:'colBlue',Y:'colYellow
 if(!document.getElementById('one-font-link')){ var fl=document.createElement('link'); fl.id='one-font-link'; fl.rel='stylesheet'; fl.href='https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'; document.head.appendChild(fl); }
 if(!document.getElementById('one-plugin-css')){
   var stEl=document.createElement('style'); stEl.id='one-plugin-css';
-  stEl.textContent = ".one-root canvas{ image-rendering:pixelated; image-rendering:crisp-edges; }\n.one-root, .one-root #menu{ position:absolute; inset:0; }\n.one-root{ background:#0a3;  background-size:cover; background-position:center; image-rendering:pixelated; }\n.one-root button{ border:none; border-radius:6px; padding:12px 14px; font-size:11px; cursor:pointer; color:#fff; background:#2b6cff;\n    box-shadow:0 5px 0 #17408f; font-family:inherit; margin:6px 4px 0 0; transition:transform .05s; letter-spacing:1px; }\n.one-root button:active{ transform:translateY(3px); box-shadow:0 2px 0 #17408f; }\n.one-root button.green{ background:#3fbf3f; box-shadow:0 5px 0 #1f7a1f; }\n.one-root button.grey{ background:#54687a; box-shadow:0 5px 0 #33424f; }\n.one-root button.warn{ background:#ffb020; color:#5a3d00; box-shadow:0 5px 0 #b57200; }\n.one-root button:disabled{ opacity:.45; box-shadow:none; cursor:default; }\n.one-root .hidden{ display:none !important; }\n.one-root .pod{ position:absolute; z-index:6; display:flex; flex-direction:column; align-items:center; gap:5px; }\n.one-root .pod .av{ width:60px; height:60px; }\n.one-root .pod .nm{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.35); border-radius:5px; padding:4px 8px; font-size:9px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .pod.turn .av{ filter:drop-shadow(0 0 0 #ffe14d); animation:podpulse .9s steps(2) infinite; }\n\n  @keyframes podpulse{ 0%,100%{ filter:drop-shadow(0 0 4px #ffe14d);} 50%{ filter:drop-shadow(0 0 10px #ffe14d);} }\n.one-root .seat-top{ top:5%; left:50%; transform:translateX(-50%); }\n.one-root .seat-left{ top:32%; left:12px; }\n.one-root .seat-right{ top:32%; right:12px; }\n.one-root .seat-me{ bottom:calc(25vh + 6px); left:12px; }\n.one-root .fan{ position:absolute; z-index:5; height:70px; }\n.one-root .fan .card{ position:absolute; top:0; }\n.one-root .fan-top{ top:calc(5% + 70px); left:50%; transform:translateX(-50%); }\n.one-root .fan-left{ top:calc(32% + 66px); left:12px; }\n.one-root .fan-right{ top:calc(32% + 66px); right:12px; }\n.one-root .gtop{ position:absolute; top:0; left:0; right:0; z-index:8; display:flex; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0; }\n.one-root .chip{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.3); border-radius:6px; padding:6px 10px; font-size:9px; display:flex; align-items:center; gap:6px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gx{ margin-left:auto; background:#e5484d; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:16px; cursor:pointer; box-shadow:0 4px 0 #a12; }\n.one-root .center{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); z-index:5; display:flex; align-items:center; gap:26px; }\n.one-root .plabel{ font-size:9px; opacity:.9; text-align:center; margin-top:8px; text-shadow:0 2px 3px rgba(0,0,0,.6); }\n.one-root .colorchip{ position:absolute; left:50%; top:calc(46% + 86px); transform:translateX(-50%); z-index:6; font-size:9px; padding:6px 12px; border-radius:6px; border:2px solid rgba(255,255,255,.5); box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gstatus{ position:absolute; left:0; right:0; top:calc(46% - 132px); z-index:6; text-align:center; font-size:11px; line-height:1.6; text-shadow:0 3px 0 rgba(0,0,0,.6); padding:0 12px; }\n.one-root .dirbadge{ position:absolute; left:50%; top:calc(46% - 104px); transform:translateX(-50%); z-index:6; font-size:20px; text-shadow:0 2px 0 rgba(0,0,0,.5); }\n.one-root .handwrap{ position:absolute; left:0; right:0; bottom:0; z-index:7; padding:6px 6px calc(env(safe-area-inset-bottom,0px) + 8px); }\n.one-root .gbtns{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; flex-wrap:wrap; }\n.one-root .hand{ display:flex; justify-content:center; align-items:flex-end; min-height:104px; }\n.one-root .hand .slot{ margin-left:-20px; transition:transform .08s; }\n.one-root .hand .slot:first-child{ margin-left:0; }\n.one-root .hand .slot.playable:hover, .one-root .hand .slot.playable:active{ transform:translateY(-16px); z-index:20; }\n.one-root .card{ display:block; image-rendering:auto; filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root img.card{ image-rendering:auto; }\n.one-root .card.disabled{ filter:brightness(.62) saturate(.7) drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root .colors{ display:flex; gap:12px; justify-content:center; margin-top:10px; }\n.one-root .colors button{ width:52px; height:52px; border-radius:6px; border:3px solid #fff; box-shadow:0 4px 0 rgba(0,0,0,.35); }\n.one-root .modalbg{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; z-index:40; }\n.one-root .modal{ background:#0a1a30; border:3px solid #2b6cff; border-radius:8px; padding:18px; width:min(92%,340px); text-align:center; box-shadow:0 10px 0 rgba(0,0,0,.5); font-size:11px; line-height:1.7; }\n.one-root .flash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:50; }\n.one-root .flash span{ font-size:11vw; color:#ffe14d; text-shadow:0 5px 0 #b5311e, 0 0 24px rgba(255,225,77,.7); opacity:0; animation:fp .6s steps(4) forwards; }\n\n  @keyframes fp{ 0%{opacity:0;transform:scale(.4)} 55%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }\n.one-root .toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; border:2px solid #444; color:#fff; padding:10px 14px; border-radius:6px; font-size:10px; z-index:60; opacity:0; transition:opacity .2s; }\n.one-root .toast.show{ opacity:1; }\n@media (max-width:760px){ .one-root .hand{ justify-content:flex-start; overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; padding:6px 10px; scrollbar-width:none; } .one-root .hand::-webkit-scrollbar{ display:none; } .one-root .hand .slot{ margin-left:-12px; } .one-root .hand .slot:first-child{ margin-left:0; } }"
+  stEl.textContent = ".one-root canvas{ image-rendering:pixelated; image-rendering:crisp-edges; }\n.one-root, .one-root #menu{ position:absolute; inset:0; }\n.one-root{ background:#0a3;  background-size:cover; background-position:center; image-rendering:pixelated; }\n.one-root button{ border:none; border-radius:6px; padding:12px 14px; font-size:11px; cursor:pointer; color:#fff; background:#2b6cff;\n    box-shadow:0 5px 0 #17408f; font-family:inherit; margin:6px 4px 0 0; transition:transform .05s; letter-spacing:1px; }\n.one-root button:active{ transform:translateY(3px); box-shadow:0 2px 0 #17408f; }\n.one-root button.green{ background:#3fbf3f; box-shadow:0 5px 0 #1f7a1f; }\n.one-root button.grey{ background:#54687a; box-shadow:0 5px 0 #33424f; }\n.one-root button.warn{ background:#ffb020; color:#5a3d00; box-shadow:0 5px 0 #b57200; }\n.one-root button:disabled{ opacity:.45; box-shadow:none; cursor:default; }\n.one-root .hidden{ display:none !important; }\n.one-root .pod{ position:absolute; z-index:6; display:flex; flex-direction:column; align-items:center; gap:5px; }\n.one-root .pod .av{ width:60px; height:60px; }\n.one-root .pod .nm{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.35); border-radius:5px; padding:4px 8px; font-size:9px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .pod.turn .av{ filter:drop-shadow(0 0 0 #ffe14d); animation:podpulse .9s steps(2) infinite; }\n\n  @keyframes podpulse{ 0%,100%{ filter:drop-shadow(0 0 4px #ffe14d);} 50%{ filter:drop-shadow(0 0 10px #ffe14d);} }\n.one-root .seat-top{ top:5%; left:50%; transform:translateX(-50%); }\n.one-root .seat-left{ top:32%; left:12px; }\n.one-root .seat-right{ top:32%; right:12px; }\n.one-root .seat-me{ bottom:calc(25vh + 6px); left:12px; }\n.one-root .fan{ position:absolute; z-index:5; height:70px; }\n.one-root .fan .card{ position:absolute; top:0; }\n.one-root .fan-top{ top:calc(5% + 70px); left:50%; transform:translateX(-50%); }\n.one-root .fan-left{ top:calc(32% + 66px); left:12px; }\n.one-root .fan-right{ top:calc(32% + 66px); right:12px; }\n.one-root .gtop{ position:absolute; top:0; left:0; right:0; z-index:8; display:flex; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0; }\n.one-root .chip{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.3); border-radius:6px; padding:6px 10px; font-size:9px; display:flex; align-items:center; gap:6px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gx{ margin-left:auto; background:#e5484d; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:16px; cursor:pointer; box-shadow:0 4px 0 #a12; }\n.one-root .center{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); z-index:5; display:flex; align-items:center; gap:26px; }\n.one-root .plabel{ font-size:9px; opacity:.9; text-align:center; margin-top:8px; text-shadow:0 2px 3px rgba(0,0,0,.6); }\n.one-root .colorchip{ position:absolute; left:50%; top:calc(46% + 86px); transform:translateX(-50%); z-index:6; font-size:9px; padding:6px 12px; border-radius:6px; border:2px solid rgba(255,255,255,.5); box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gstatus{ position:absolute; left:0; right:0; top:calc(46% - 132px); z-index:6; text-align:center; font-size:11px; line-height:1.6; text-shadow:0 3px 0 rgba(0,0,0,.6); padding:0 12px; }\n.one-root .dirbadge{ position:absolute; left:50%; top:calc(46% - 104px); transform:translateX(-50%); z-index:6; font-size:20px; text-shadow:0 2px 0 rgba(0,0,0,.5); }\n.one-root .handwrap{ position:absolute; left:0; right:0; bottom:0; z-index:7; padding:6px 6px calc(env(safe-area-inset-bottom,0px) + 8px); }\n.one-root .gbtns{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; flex-wrap:wrap; }\n.one-root .hand{ display:flex; justify-content:center; align-items:flex-end; min-height:104px; }\n.one-root .hand .slot{ margin-left:-20px; transition:transform .08s; }\n.one-root .hand .slot:first-child{ margin-left:0; }\n.one-root .hand .slot.playable:hover, .one-root .hand .slot.playable:active{ transform:translateY(-16px); z-index:20; }\n.one-root .card{ display:block; image-rendering:auto; filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root img.card{ image-rendering:auto; }\n.one-root .card.disabled{ filter:brightness(.62) saturate(.7) drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root .colors{ display:flex; gap:12px; justify-content:center; margin-top:10px; }\n.one-root .colors button{ width:52px; height:52px; border-radius:6px; border:3px solid #fff; box-shadow:0 4px 0 rgba(0,0,0,.35); }\n.one-root .modalbg{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; z-index:40; }\n.one-root .modal{ background:#0a1a30; border:3px solid #2b6cff; border-radius:8px; padding:18px; width:min(92%,340px); text-align:center; box-shadow:0 10px 0 rgba(0,0,0,.5); font-size:11px; line-height:1.7; }\n.one-root .flash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:50; }\n.one-root .flash span{ font-size:11vw; color:#ffe14d; text-shadow:0 5px 0 #b5311e, 0 0 24px rgba(255,225,77,.7); opacity:0; animation:fp .6s steps(4) forwards; }\n\n  @keyframes fp{ 0%{opacity:0;transform:scale(.4)} 55%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }\n.one-root .toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; border:2px solid #444; color:#fff; padding:10px 14px; border-radius:6px; font-size:10px; z-index:60; opacity:0; transition:opacity .2s; }\n.one-root .toast.show{ opacity:1; }\n.one-root .one-timer{ position:absolute; left:50%; top:calc(46% - 150px); transform:translateX(-50%); z-index:6; width:min(58%,340px); height:10px; border:2px solid rgba(0,0,0,.55); background:rgba(0,0,0,.35); border-radius:6px; overflow:hidden; display:none; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .one-timer.on{ display:block; }\n.one-root .one-timer i{ display:block; height:100%; width:100%; background:linear-gradient(90deg,#39d353,#ffd23f,#e5484d); }\n@media (max-width:760px){ .one-root .hand{ justify-content:flex-start; overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; padding:6px 10px; scrollbar-width:none; } .one-root .hand::-webkit-scrollbar{ display:none; } .one-root .hand .slot{ margin-left:-12px; } .one-root .hand .slot:first-child{ margin-left:0; } }"
     + '\n.one-root{position:fixed;inset:0;z-index:65;overflow:hidden;color:#fff;}'
     // Force the pixel font on the whole overlay with !important so Winky's own
     // styles can never override it (this was why the plugin text looked generic).
@@ -149,7 +149,7 @@ function makeCardCanvas(code){
   if(_cardCache[code]){ return copyCanvas(_cardCache[code]); }
   var W=200,H=300; var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
   ctx.imageSmoothingEnabled=true; ctx.lineJoin='round'; ctx.lineCap='round';
-  var pad=8, rad=26;  // thinner white border (was 12) — looked too thick when downscaled on desktop
+  var pad=12, rad=28;  // EXACTLY like single player (the border is fine; the thickness came from browser scaling, fixed in cardEl)
   // white rounded body
   roundRectPath(ctx,2,2,W-4,H-4,rad); ctx.fillStyle='#ffffff'; ctx.fill();
   if(code==='back'){
@@ -196,9 +196,18 @@ function cardShort(c){ var k=cardKind(c); if(k==='num')return c.slice(1); if(k==
 /* Public: cardEl(code, sizeClass) -> canvas element sized for display */
 var SIZES={ '': [66,98], 'sm':[46,68], 'md':[52,78], 'big':[80,118] };
 function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; 
-  var cv=makeCardCanvas(code); cv.style.width=sz[0]+'px'; cv.style.height=sz[1]+'px'; cv.className='card '+(cls||'');
-  cv.style.imageRendering='auto';  // smooth downscale exactly like single player (no optimize-contrast: it made borders look thick on desktop)
-  return cv; }
+  var big=makeCardCanvas(code); // 200x300 master (identical to single player)
+  // Downscale to display size OURSELVES with high-quality smoothing, at device
+  // pixel ratio, so the result is crisp AND has a thin border on EVERY device.
+  // (Letting the browser CSS-scale the big canvas made borders look thick on
+  //  desktop in the Winky page; doing the scale here removes that variable.)
+  var dpr=1; try{ dpr=Math.max(1,Math.min(3, window.devicePixelRatio||1)); }catch(e){}
+  var w=sz[0], h=sz[1];
+  var out=document.createElement('canvas'); out.width=Math.round(w*dpr); out.height=Math.round(h*dpr);
+  out.style.width=w+'px'; out.style.height=h+'px'; out.className='card '+(cls||''); out.style.imageRendering='auto';
+  var oc=out.getContext('2d'); oc.imageSmoothingEnabled=true; try{ oc.imageSmoothingQuality='high'; }catch(e){}
+  oc.drawImage(big, 0,0, out.width, out.height);
+  return out; }
 var _avCache={};
 function makeAvatar(kind){
   if(_avCache[kind]) return copyCanvas(_avCache[kind]);
@@ -305,6 +314,24 @@ function resolve4(st,action){ var pd=st.pending4; if(!pd)return; var tI=pd.targe
   else { st.hands[pd.target]=st.hands[pd.target].concat(drawCards(st,4)); st.saidOne[pd.target]=false; st.turnIdx=norm(st,tI+st.dir); }
   st.pending4=null;
 }
+/* Make an automatic move for `slot` on the given state (used by the 30s turn
+   timer and the host AFK fallback). If a +4 decision is pending on that slot ->
+   accept. Else play the first playable card (wild -> auto best color); if none,
+   draw one and play it if playable, otherwise pass the turn. */
+function engineAutoMove(st,slot){
+  if(st.pending4 && st.pending4.target===slot){ resolve4(st,'accept'); return; }
+  if(curSlot(st)!==slot || st.winner) return;
+  var top=st.discard[st.discard.length-1];
+  var pl=st.hands[slot].filter(function(c){ return canPlay(c,st.color,top); });
+  if(pl.length){ var pick=pl[0], k=cardKind(pick);
+    if(k==='wild'||k==='wild4'){ if(k==='wild4')st.prev4=st.color; st.color=bestColor(st.hands[slot].filter(function(c){return c!==pick;})); }
+    playCard(st,slot,pick); return; }
+  var g=drawCards(st,1); st.hands[slot]=st.hands[slot].concat(g); var drew=g[0];
+  if(drew && canPlay(drew,st.color,top)){ var k2=cardKind(drew);
+    if(k2==='wild'||k2==='wild4'){ if(k2==='wild4')st.prev4=st.color; st.color=bestColor(st.hands[slot].filter(function(c){return c!==drew;})); }
+    playCard(st,slot,drew); }
+  else { st.turnIdx=norm(st,st.turnIdx+st.dir); st.saidOne[slot]=false; }
+}
 
 /* ---------------- View ---------------- */
 function el2(t,c,x){ var d=document.createElement(t); if(c)d.className=c; if(x!=null)d.textContent=x; return d; }
@@ -322,7 +349,10 @@ views.oneGame=function(p){
   // localize pile labels (SCARTI/PESCA)
   try{ var labs=root.querySelectorAll('.plabel'); if(labs[0])labs[0].textContent=T2('scarti'); if(labs[1])labs[1].textContent=T2('pesca'); }catch(e){}
 
+  // Turn timer bar (30s). Appended here so it exists before first paint.
+  try{ var _tb=el2('div','one-timer'); _tb.id='oneTimer'; var _tf=el2('i',null,null); _tf.id='oneTimerFill'; _tb.appendChild(_tf); root.appendChild(_tb); }catch(e){}
   var st=null, lastSeq=-1, botTimer=null, actedSeq=-1, endBg=null, rematchBg=null, otherAv={nick:p.otherNick};
+  var TURN_MS=30000, turnTimer=null, turnToken=null, lastChangeTs=Date.now();
   function flash(t){ var f=el2('div','flash'); var s=el2('span',null,t); f.appendChild(s); root.appendChild(f); setTimeout(function(){ try{f.remove();}catch(e){} },650); }
   try{ if(p.otherId){ rest('/users?id=eq.'+p.otherId+'&select=nickname,avatar_id,avatar_url').then(function(r){ if(r&&r[0]){ otherAv={nick:r[0].nickname,id:r[0].avatar_id,url:r[0].avatar_url}; paint(); } }).catch(function(){}); } }catch(e){}
 
@@ -363,13 +393,27 @@ views.oneGame=function(p){
     var anyOpp1=false; st.players.forEach(function(slot){ if(slot!==me&&!(st.mode==='one2'&&st.team[slot]===st.team[me])&&st.hands[slot].length===1&&!st.saidOne[slot]) anyOpp1=true; });
     $('catchBtn').classList.toggle('hidden', !(anyOpp1&&meTurn));
     $('accept4Btn').classList.toggle('hidden', !decide4); $('challenge4Btn').classList.toggle('hidden', !decide4);
+    // 30s turn timer: run only while it's MY actionable turn (or my +4 decision).
+    var actionable=(meTurn||decide4)&&!st.winner;
+    if(actionable){ var tok='t'+st.seq; if(turnToken!==tok) startTurnTimer(tok); }
+    else stopTurnTimer();
     setStatus();
   }
   ACTIVE={ paint:paint }; // let verbatim BACKIMG/ICON onload repaint
   var myMustPlay=false; // LOCAL only — never serialized into the shared row, so
                         // it can never leave the other player's controls disabled.
 
-  function pushState(){ st.seq=(st.seq||0)+1; actedSeq=st.seq; lastSeq=st.seq; G.state=st; try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:st,updated_at:new Date().toISOString()}}); }catch(e){} paint(); }
+  function pushState(){ st.seq=(st.seq||0)+1; actedSeq=st.seq; lastSeq=st.seq; lastChangeTs=Date.now(); G.state=st; try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:st,updated_at:new Date().toISOString()}}); }catch(e){} paint(); }
+  /* ---- 30s turn timer with bar + auto-move ---- */
+  function showTimer(on){ var t=$('oneTimer'); if(t) t.classList.toggle('on', !!on); }
+  function stopTurnTimer(){ if(turnTimer){ clearInterval(turnTimer); turnTimer=null; } showTimer(false); turnToken=null; }
+  function startTurnTimer(tok){ if(turnTimer)clearInterval(turnTimer); turnToken=tok; var deadline=Date.now()+TURN_MS; showTimer(true);
+    var fill=$('oneTimerFill'); if(fill) fill.style.width='100%';
+    turnTimer=setInterval(function(){ var left=Math.max(0,deadline-Date.now()); if(fill) fill.style.width=Math.round(left/TURN_MS*100)+'%';
+      if(left<=0){ clearInterval(turnTimer); turnTimer=null; showTimer(false); turnToken=null; try{ autoPlayNow(); }catch(e){} } }, 150); }
+  function autoPlayNow(){ if(!st||st.winner)return; var me=meSlot();
+    if(!(curSlot(st)===me || (st.pending4&&st.pending4.target===me)))return;
+    engineAutoMove(st, me); myMustPlay=false; pushState(); }
   function chooseColor(cb){ var bg=el2('div','modalbg'); var box=el2('div','modal'); box.appendChild(el2('div',null,T2('chooseColor'))); var row=el2('div','colors'); ['R','G','B','Y'].forEach(function(c){ var b=document.createElement('button'); b.style.background=COLHEX[c]; b.onclick=function(){ bg.remove(); cb(c); }; row.appendChild(b); }); box.appendChild(row); bg.appendChild(box); root.appendChild(bg); }
   function tryPlay(code){ if(!st||curSlot(st)!==meSlot()||st.winner)return; var top=st.discard[st.discard.length-1]; if(!canPlay(code,st.color,top)){ toast(T2('cantPlay')); return; } var k=cardKind(code);
     if(k==='wild'||k==='wild4'){ var prev=st.color; chooseColor(function(c){ if(k==='wild4')st.prev4=prev; st.color=c; myMustPlay=false; flash(cardShort(code)); playCard(st,meSlot(),code); pushState(); }); }
@@ -388,13 +432,18 @@ views.oneGame=function(p){
     // Drive the current bot. The botTimer guard alone prevents double-scheduling;
     // the old `seq!==actedSeq` check was ALWAYS false after a human move (pushState
     // set actedSeq=seq), so bots never played. Removed.
-    var slot=curSlot(st); if(isBot(st,slot)){ botTimer=setTimeout(function(){ botTimer=null; botPlayOnce(st,slot,diff); pushState(); },750); } }
+    var slot=curSlot(st); if(isBot(st,slot)){ botTimer=setTimeout(function(){ botTimer=null; botPlayOnce(st,slot,diff); pushState(); },750); return; }
+    // AFK fallback: if it's a HUMAN's turn (or their +4 decision) and nothing has
+    // changed for 45s (e.g. they closed the tab, so their own 30s timer can't
+    // fire), the host makes an automatic move so the game never stalls forever.
+    var deciderHuman = st.pending4 ? (!isBot(st,st.pending4.target)?st.pending4.target:null) : (!isBot(st,slot)?slot:null);
+    if(deciderHuman && (Date.now()-lastChangeTs>45000)){ botTimer=setTimeout(function(){ botTimer=null; engineAutoMove(st, deciderHuman); pushState(); }, 50); } }
 
   function applyRow(r){ if(!r)return;
     if(host && r.status==='active' && !r.state){ var A={id:r.from_id,nick:r.from_nick}, B={id:r.to_id,nick:r.to_nick}; var seeded=seed(p.mode||r.from_char, A, B); try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:seeded,updated_at:new Date().toISOString()}}); }catch(e){} st=seeded; G.state=st; lastSeq=st.seq; paint(); return; }
     if(r.status!=='active'){ $('gStatus').textContent=T2('waitAccept'); return; }
     if(!r.state){ $('gStatus').textContent=T2('waitOpp'); return; }
-    if(r.state.seq!==lastSeq){ st=r.state; G.state=st; lastSeq=st.seq;
+    if(r.state.seq!==lastSeq){ st=r.state; G.state=st; lastSeq=st.seq; lastChangeTs=Date.now();
       // ---- Rematch negotiation takes priority over the end screen ----
       if(st.rematch){
         if(st.rematch.by && st.rematch.accepted && st.rematch.by!==st.rematch.accepted){
@@ -422,7 +471,7 @@ views.oneGame=function(p){
   }
   function tick(){ try{ rest('/game_challenges?id=eq.'+p.id+'&select=*').then(function(rows){ applyRow(rows&&rows[0]); }).catch(function(){}); }catch(e){} }
 
-  function endGame(){ if(endBg||rematchBg)return; setStatus(); var iWon = st.mode==='one2' ? (st.team[st.winner]===st.team[meSlot()]) : (st.winner===meSlot());
+  function endGame(){ if(endBg||rematchBg)return; stopTurnTimer(); setStatus(); var iWon = st.mode==='one2' ? (st.team[st.winner]===st.team[meSlot()]) : (st.winner===meSlot());
     var msg = st.mode==='one2' ? (iWon?T2('teamWin'):T2('teamLose')) : (iWon?T2('youWin'):T2('youLose'));
     endBg=el2('div','modalbg'); var box=el2('div','modal'); var t=el2('div',null,msg); t.style.fontSize='16px'; t.style.color='#ffe14d'; box.appendChild(t);
     var row=el2('div','row'); row.style.justifyContent='center'; row.style.marginTop='12px';
@@ -451,7 +500,7 @@ views.oneGame=function(p){
     if(host){ doReseed(); } else { pushState(); showWaitingRematch(); } }
   function declineRematch(){ if(!st)return; st.rematch=null; closeRematch(); pushState(); leave(); }
   function doReseed(){ var A={id:st.userA,nick:st.names.A}, B={id:st.userB,nick:st.names.B}; st=seed(st.mode,A,B); G.state=st; lastSeq=st.seq; actedSeq=-1; closeEnd(); closeRematch(); pushState(); }
-  function leave(){ App.stopPoll(); if(botTimer){clearTimeout(botTimer);botTimer=null;} ACTIVE=null; G.state=null; try{ root.remove(); }catch(e){} App.back(); }
+  function leave(){ App.stopPoll(); if(botTimer){clearTimeout(botTimer);botTimer=null;} stopTurnTimer(); ACTIVE=null; G.state=null; try{ root.remove(); }catch(e){} App.back(); }
 
   App.stopPoll(); tick(); App.poll=setInterval(tick,1100);
 };
