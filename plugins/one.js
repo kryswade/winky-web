@@ -149,7 +149,7 @@ function makeCardCanvas(code){
   if(_cardCache[code]){ return copyCanvas(_cardCache[code]); }
   var W=200,H=300; var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
   ctx.imageSmoothingEnabled=true; ctx.lineJoin='round'; ctx.lineCap='round';
-  var pad=12, rad=28;
+  var pad=8, rad=26;  // thinner white border (was 12) — looked too thick when downscaled on desktop
   // white rounded body
   roundRectPath(ctx,2,2,W-4,H-4,rad); ctx.fillStyle='#ffffff'; ctx.fill();
   if(code==='back'){
@@ -261,7 +261,12 @@ var BOT_KINDS={ botL:'robot', botR:'fox' };
 
 function seed(mode, A, B){
   var players, kind={}, names={}, team={}, avatar={};
-  if(mode==='one2'){ players=['A','botL','B','botR']; kind={A:'human',botL:'bot',B:'human',botR:'bot'}; team={A:0,botL:1,B:0,botR:1}; names={A:A.nick,botL:'CPU-1',B:B.nick,botR:'CPU-2'}; avatar={botL:'robot',botR:'fox'}; }
+  if(mode==='one2'){ players=['A','botL','B','botR']; kind={A:'human',botL:'bot',B:'human',botR:'bot'}; team={A:0,botL:1,B:0,botR:1};
+    // Random bot names + avatars (seeded on host, shared with both players).
+    var POOL=['Ezra','Elliana','Garrett','Nova','Milo','Zoe','Pixel','Rex','Luna'];
+    var i1=Math.floor(Math.random()*POOL.length); var i2=(i1+1+Math.floor(Math.random()*(POOL.length-1)))%POOL.length;
+    var AV=['robot','fox','panda']; var a1=Math.floor(Math.random()*AV.length); var a2=(a1+1+Math.floor(Math.random()*(AV.length-1)))%AV.length;
+    names={A:A.nick,botL:POOL[i1],B:B.nick,botR:POOL[i2]}; avatar={botL:AV[a1],botR:AV[a2]}; }
   else { players=['A','B']; kind={A:'human',B:'human'}; team={A:0,B:1}; names={A:A.nick,B:B.nick}; }
   var deck=shuffle(buildDeck()); var hands={}; players.forEach(function(p){ hands[p]=deck.splice(0,7); });
   var start=null; for(var g=0;g<deck.length;g++){ if(cardKind(deck[deck.length-1])==='num'){ start=deck.pop(); break; } deck.unshift(deck.pop()); } if(!start)start='R0';
@@ -380,7 +385,10 @@ views.oneGame=function(p){
 
   function hostDrive(){ if(!host||!st||st.winner)return; if(botTimer)return;
     if(st.pending4 && isBot(st,st.pending4.target)){ botTimer=setTimeout(function(){ botTimer=null; resolve4(st, botDecide4(st,diff)?'challenge':'accept'); pushState(); },700); return; }
-    var slot=curSlot(st); if(isBot(st,slot) && st.seq!==actedSeq){ botTimer=setTimeout(function(){ botTimer=null; botPlayOnce(st,slot,diff); actedSeq=st.seq+1; pushState(); },750); } }
+    // Drive the current bot. The botTimer guard alone prevents double-scheduling;
+    // the old `seq!==actedSeq` check was ALWAYS false after a human move (pushState
+    // set actedSeq=seq), so bots never played. Removed.
+    var slot=curSlot(st); if(isBot(st,slot)){ botTimer=setTimeout(function(){ botTimer=null; botPlayOnce(st,slot,diff); pushState(); },750); } }
 
   function applyRow(r){ if(!r)return;
     if(host && r.status==='active' && !r.state){ var A={id:r.from_id,nick:r.from_nick}, B={id:r.to_id,nick:r.to_nick}; var seeded=seed(p.mode||r.from_char, A, B); try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:seeded,updated_at:new Date().toISOString()}}); }catch(e){} st=seeded; G.state=st; lastSeq=st.seq; paint(); return; }
