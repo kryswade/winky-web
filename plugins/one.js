@@ -100,13 +100,13 @@ function cardLabel(c){ var k=cardKind(c); if(k==='num')return c.slice(1);
   if(k==='wild')return 'Jolly'; return 'Jolly Pesca Quattro'; }
 
 var ICON={ skip:new Image(), rev:new Image() }, ICON_READY={skip:false,rev:false};
-function _iconLoaded(which){ ICON_READY[which]=true; _cardCache={}; try{ if(G.state) render(); }catch(e){} }
+function _iconLoaded(which){ ICON_READY[which]=true; _cardCache={}; try{_imgCache={};}catch(e){} try{ if(G.state) render(); }catch(e){} }
 if(SPR.skipIcon){ ICON.skip.onload=function(){ _iconLoaded('skip'); }; ICON.skip.src=SPR.skipIcon; }
 if(SPR.revIcon){ ICON.rev.onload=function(){ _iconLoaded('rev'); }; ICON.rev.src=SPR.revIcon; }
 /* AI back sprite, composited ON TOP of an opaque red body (so the card back is
    never transparent). Falls back to the drawn back until the image loads. */
 var BACKIMG=new Image(), BACK_READY=false;
-if(SPR.back){ BACKIMG.onload=function(){ BACK_READY=true; _cardCache={}; try{ if(G.state) render(); }catch(e){} }; BACKIMG.src=SPR.back; }
+if(SPR.back){ BACKIMG.onload=function(){ BACK_READY=true; _cardCache={}; try{_imgCache={};}catch(e){} try{ if(G.state) render(); }catch(e){} }; BACKIMG.src=SPR.back; }
 function copyCanvas(src){ var c=document.createElement('canvas'); c.width=src.width; c.height=src.height; var x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.drawImage(src,0,0); return c; }
 /* ---- Smooth, cartoonish card renderer (high-res + anti-aliased) ---- */
 function roundRectPath(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
@@ -145,34 +145,32 @@ function smoothReverse(ctx,cx,cy,r,color){ ctx.save(); ctx.strokeStyle=color; ct
   ctx.restore(); }
 
 var _cardCache={};
-function makeCardCanvas(code){
-  if(_cardCache[code]){ return copyCanvas(_cardCache[code]); }
-  var W=200,H=300; var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
-  ctx.imageSmoothingEnabled=true; ctx.lineJoin='round'; ctx.lineCap='round';
-  var pad=12, rad=28;
-  // white rounded body
-  roundRectPath(ctx,2,2,W-4,H-4,rad); ctx.fillStyle='#ffffff'; ctx.fill();
+function makeCardCanvas(code, W, H){
+  W=Math.round(W||200); H=Math.round(H||300); var key=code+'@'+W+'x'+H;
+  if(_cardCache[key]) return _cardCache[key];
+  var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
+  ctx.imageSmoothingEnabled=true; try{ctx.imageSmoothingQuality='high';}catch(e){} ctx.lineJoin='round'; ctx.lineCap='round';
+  var pad=Math.max(2, W*0.038), rad=Math.max(4, W*0.13), irad=Math.max(3, rad-pad*0.5);  // thin border (~3.8% of width)
+  roundRectPath(ctx,0.5,0.5,W-1,H-1,rad); ctx.fillStyle='#ffffff'; ctx.fill();
   if(code==='back'){
-    roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.fillStyle='#e5484d'; ctx.fill();
-    if(BACK_READY){ ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip(); ctx.drawImage(BACKIMG,pad,pad,W-2*pad,H-2*pad); ctx.restore(); }
+    roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.fillStyle='#e5484d'; ctx.fill();
+    if(BACK_READY){ ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip(); ctx.drawImage(BACKIMG,pad,pad,W-2*pad,H-2*pad); ctx.restore(); }
     else { drawPlaque(ctx,W,H); smoothText(ctx,'ONE',W/2,H/2,Math.round(H*0.13),'#e5484d'); }
-    _cardCache[code]=cv; return copyCanvas(cv);
+    _cardCache[key]=cv; return cv;
   }
   var k=cardKind(code), col=cardColor(code);
   if(k==='wild'||k==='wild4'){
-    ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip();
+    ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip();
     var mx=W/2,my=H/2;
-    ctx.fillStyle=COLHEX.R; ctx.fillRect(0,0,mx,my); ctx.fillStyle=COLHEX.G; ctx.fillRect(mx,0,W-mx,my);
-    ctx.fillStyle=COLHEX.B; ctx.fillRect(0,my,mx,H-my); ctx.fillStyle=COLHEX.Y; ctx.fillRect(mx,my,W-mx,H-my);
-    ctx.restore();
-    drawPlaque(ctx,W,H);
+    ctx.fillStyle=COLHEX.R; ctx.fillRect(pad,pad,mx-pad,my-pad); ctx.fillStyle=COLHEX.G; ctx.fillRect(mx,pad,W-pad-mx,my-pad);
+    ctx.fillStyle=COLHEX.B; ctx.fillRect(pad,my,mx-pad,H-pad-my); ctx.fillStyle=COLHEX.Y; ctx.fillRect(mx,my,W-pad-mx,H-pad-my);
+    ctx.restore(); drawPlaque(ctx,W,H);
     smoothText(ctx, k==='wild'?'\u2605':'+4', W/2, H/2, Math.round(H*(k==='wild'?0.20:0.17)), '#222');
     drawCorners(ctx,W,H,cardShortForCorner(code),'#222');
-    _cardCache[code]=cv; return copyCanvas(cv);
+    _cardCache[key]=cv; return cv;
   }
-  // colored rounded inner + subtle bottom shade
-  roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.fillStyle=COLHEX[col]; ctx.fill();
-  ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip(); ctx.fillStyle=COLDARK[col]; ctx.fillRect(pad,H-pad-14,W-2*pad,14); ctx.restore();
+  roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.fillStyle=COLHEX[col]; ctx.fill();
+  ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip(); ctx.fillStyle=COLDARK[col]; ctx.fillRect(pad,H-pad-H*0.05,W-2*pad,H*0.05); ctx.restore();
   drawPlaque(ctx,W,H);
   var cx=W/2, cy=H/2;
   if(k==='num'){ smoothText(ctx, code.slice(1), cx, cy, Math.round(H*0.32), COLHEX[col]); }
@@ -180,7 +178,7 @@ function makeCardCanvas(code){
   else if(k==='reverse'){ smoothReverse(ctx,cx,cy,H*0.15,COLHEX[col]); }
   else if(k==='drawtwo'){ smoothText(ctx,'+2',cx,cy,Math.round(H*0.24),COLHEX[col]); }
   drawCornerMark(ctx,W,H,k,code,COLHEX[col]);
-  _cardCache[code]=cv; return copyCanvas(cv);
+  _cardCache[key]=cv; return cv;
 }
 function cardShortForCorner(code){ var k=cardKind(code); if(k==='num')return code.slice(1); if(k==='skip')return 'S'; if(k==='reverse')return 'R'; if(k==='drawtwo')return '+2'; if(k==='wild')return 'W'; return '+4'; }
 function smallCorner(ctx,str,x,y,color){ // fs=1 mini
@@ -195,8 +193,22 @@ function cardShort(c){ var k=cardKind(c); if(k==='num')return c.slice(1); if(k==
 
 /* Public: cardEl(code, sizeClass) -> canvas element sized for display */
 var SIZES={ '': [66,98], 'sm':[46,68], 'md':[52,78], 'big':[80,118] };
-function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; 
-  var cv=makeCardCanvas(code); cv.style.width=sz[0]+'px'; cv.style.height=sz[1]+'px'; cv.className='card '+(cls||''); return cv; }
+/* Return the card as an <img>, NOT a <canvas>. Reason: something in Winky's
+   stylesheet affects <canvas> rendering (the test page proved the drawing itself
+   is correct — thin borders — so the difference is purely how Winky styles the
+   canvas). An <img> is immune to any `canvas{...}` CSS rule and always scales
+   smoothly, so the thin border is guaranteed everywhere. */
+var _imgCache={};
+function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; var w=sz[0], h=sz[1];
+  var dpr=1; try{ dpr=Math.max(1,Math.min(3, window.devicePixelRatio||1)); }catch(e){}
+  var key=code+'@'+Math.round(w*dpr)+'x'+Math.round(h*dpr);
+  var url=_imgCache[key];
+  if(!url){ var cv=makeCardCanvas(code, w*dpr, h*dpr); try{ url=cv.toDataURL('image/png'); }catch(e){ url=null; } _imgCache[key]=url; }
+  if(url){ var img=document.createElement('img'); img.src=url; img.className='card '+(cls||'');
+    img.style.width=w+'px'; img.style.height=h+'px'; img.style.display='block'; img.style.imageRendering='auto'; img.draggable=false;
+    return img; }
+  // Fallback (very old browsers without toDataURL): canvas as before.
+  var out=makeCardCanvas(code, w*dpr, h*dpr); out.style.width=w+'px'; out.style.height=h+'px'; out.className='card '+(cls||''); out.style.imageRendering='auto'; return out; }
 var _avCache={};
 function makeAvatar(kind){
   if(_avCache[kind]) return copyCanvas(_avCache[kind]);
@@ -330,8 +342,8 @@ views.oneGame=function(p){
   var root=el2('div','one-root'); root.innerHTML="\n    <div class=\"gtop\">\n      <div class=\"chip\">\u23f3 <span id=\"turnWho\">\u2014</span></div>\n      <button class=\"gx\" id=\"gExit\">\u2715</button>\n    </div>\n\n    <div class=\"pod seat-top\" id=\"pod_top\"><span class=\"av\" id=\"av_top\"></span><div class=\"nm\"><span id=\"nm_top\">Bot</span> \u00b7 <span id=\"cnt_top\">7</span></div></div>\n    <div class=\"pod seat-left\" id=\"pod_left\"><span class=\"av\" id=\"av_left\"></span><div class=\"nm\"><span id=\"nm_left\">Bot</span> \u00b7 <span id=\"cnt_left\">7</span></div></div>\n    <div class=\"pod seat-right\" id=\"pod_right\"><span class=\"av\" id=\"av_right\"></span><div class=\"nm\"><span id=\"nm_right\">Bot</span> \u00b7 <span id=\"cnt_right\">7</span></div></div>\n    <div class=\"fan fan-top\" id=\"fan_top\"></div>\n    <div class=\"fan fan-left\" id=\"fan_left\"></div>\n    <div class=\"fan fan-right\" id=\"fan_right\"></div>\n\n    <div class=\"gstatus\" id=\"gStatus\">\u2026</div>\n    <div class=\"dirbadge\" id=\"dirBadge\">\u21bb</div>\n\n    <div class=\"center\">\n      <div><div id=\"discSlot\"></div><div class=\"plabel\">SCARTI</div></div>\n      <div><div id=\"drawSlot\"></div><div class=\"plabel\">PESCA</div></div>\n    </div>\n    <div class=\"colorchip\" id=\"colorChip\"></div>\n\n    <div class=\"pod seat-me turn\" id=\"pod_me\"><span class=\"av\" id=\"av_me\"></span><div class=\"nm\"><span id=\"nm_me\">Tu</span> \u00b7 <span id=\"cnt_me\">7</span></div></div>\n\n    <div class=\"handwrap\">\n      <div class=\"gbtns\">\n        <button id=\"drawBtn\" class=\"grey\">PESCA</button>\n        <button id=\"oneBtn\" class=\"warn hidden\">ONE!</button>\n        <button id=\"catchBtn\" class=\"warn hidden\">BECCA!</button>\n        <button id=\"accept4Btn\" class=\"grey hidden\">ACCETTA +4</button>\n        <button id=\"challenge4Btn\" class=\"warn hidden\">DUBITA!</button>\n      </div>\n      <div class=\"hand\" id=\"hand\"></div>\n    </div>\n  "; document.body.appendChild(root);
   // Once the pixel font is ready, clear the cached card canvases and repaint so
   // any text drawn before the font loaded is redrawn identically to single player.
-  try{ if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(function(){ try{ _cardCache={}; }catch(e){} try{ paint(); }catch(e){} }); } }catch(e){}
-  setTimeout(function(){ try{ _cardCache={}; paint(); }catch(e){} }, 600);
+  try{ if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(function(){ try{ _cardCache={};_imgCache={}; }catch(e){} try{ paint(); }catch(e){} }); } }catch(e){}
+  setTimeout(function(){ try{ _cardCache={};_imgCache={}; paint(); }catch(e){} }, 600);
   // localize labels
   $('drawBtn').textContent=T2('pesca'); $('oneBtn').textContent='ONE!'; $('catchBtn').textContent=T2('catch');
   $('accept4Btn').textContent=T2('accept4'); $('challenge4Btn').textContent=T2('chal4'); $('nm_me').textContent=T2('you');
