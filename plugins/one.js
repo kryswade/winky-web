@@ -205,7 +205,18 @@ function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; var w=sz[0], h=sz[1
   var url=_imgCache[key];
   if(!url){ var cv=makeCardCanvas(code, w*dpr, h*dpr); try{ url=cv.toDataURL('image/png'); }catch(e){ url=null; } _imgCache[key]=url; }
   if(url){ var img=document.createElement('img'); img.src=url; img.className='card '+(cls||'');
-    img.style.width=w+'px'; img.style.height=h+'px'; img.style.display='block'; img.style.imageRendering='auto'; img.draggable=false;
+    img.style.width=w+'px'; img.style.height=h+'px'; img.style.display='block'; img.draggable=false;
+    // DEFINITIVE: force smooth scaling via INLINE !important. Inline styles have the
+    // highest specificity, and an inline !important beats ANY stylesheet !important
+    // — so no Winky rule (e.g. a global img/canvas `image-rendering:pixelated`) can
+    // make the baked-in thin border look chunky. Also neutralize any inherited box
+    // frame that could add a white border, again with inline !important.
+    try{ img.style.setProperty('image-rendering','auto','important');
+         img.style.setProperty('border','0','important');
+         img.style.setProperty('padding','0','important');
+         img.style.setProperty('background','transparent','important');
+         img.style.setProperty('box-shadow','none','important');
+         img.style.setProperty('outline','none','important'); }catch(e){ img.style.imageRendering='auto'; }
     return img; }
   // Fallback (very old browsers without toDataURL): canvas as before.
   var out=makeCardCanvas(code, w*dpr, h*dpr); out.style.width=w+'px'; out.style.height=h+'px'; out.className='card '+(cls||''); out.style.imageRendering='auto'; return out; }
