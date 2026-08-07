@@ -69,7 +69,7 @@ function colName(c){ return T2({R:'colRed',G:'colGreen',B:'colBlue',Y:'colYellow
 if(!document.getElementById('one-font-link')){ var fl=document.createElement('link'); fl.id='one-font-link'; fl.rel='stylesheet'; fl.href='https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'; document.head.appendChild(fl); }
 if(!document.getElementById('one-plugin-css')){
   var stEl=document.createElement('style'); stEl.id='one-plugin-css';
-  stEl.textContent = ".one-root canvas{ image-rendering:pixelated; image-rendering:crisp-edges; }\n.one-root, .one-root #menu{ position:absolute; inset:0; }\n.one-root{ background:#0a3;  background-size:cover; background-position:center; image-rendering:pixelated; }\n.one-root button{ border:none; border-radius:6px; padding:12px 14px; font-size:11px; cursor:pointer; color:#fff; background:#2b6cff;\n    box-shadow:0 5px 0 #17408f; font-family:inherit; margin:6px 4px 0 0; transition:transform .05s; letter-spacing:1px; }\n.one-root button:active{ transform:translateY(3px); box-shadow:0 2px 0 #17408f; }\n.one-root button.green{ background:#3fbf3f; box-shadow:0 5px 0 #1f7a1f; }\n.one-root button.grey{ background:#54687a; box-shadow:0 5px 0 #33424f; }\n.one-root button.warn{ background:#ffb020; color:#5a3d00; box-shadow:0 5px 0 #b57200; }\n.one-root button:disabled{ opacity:.45; box-shadow:none; cursor:default; }\n.one-root .hidden{ display:none !important; }\n.one-root .pod{ position:absolute; z-index:6; display:flex; flex-direction:column; align-items:center; gap:5px; }\n.one-root .pod .av{ width:60px; height:60px; }\n.one-root .pod .nm{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.35); border-radius:5px; padding:4px 8px; font-size:9px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .pod.turn .av{ filter:drop-shadow(0 0 0 #ffe14d); animation:podpulse .9s steps(2) infinite; }\n\n  @keyframes podpulse{ 0%,100%{ filter:drop-shadow(0 0 4px #ffe14d);} 50%{ filter:drop-shadow(0 0 10px #ffe14d);} }\n.one-root .seat-top{ top:5%; left:50%; transform:translateX(-50%); }\n.one-root .seat-left{ top:32%; left:12px; }\n.one-root .seat-right{ top:32%; right:12px; }\n.one-root .seat-me{ bottom:calc(25vh + 6px); left:12px; }\n.one-root .fan{ position:absolute; z-index:5; height:70px; }\n.one-root .fan .card{ position:absolute; top:0; }\n.one-root .fan-top{ top:calc(5% + 70px); left:50%; transform:translateX(-50%); }\n.one-root .fan-left{ top:calc(32% + 66px); left:12px; }\n.one-root .fan-right{ top:calc(32% + 66px); right:12px; }\n.one-root .gtop{ position:absolute; top:0; left:0; right:0; z-index:8; display:flex; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0; }\n.one-root .chip{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.3); border-radius:6px; padding:6px 10px; font-size:9px; display:flex; align-items:center; gap:6px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gx{ margin-left:auto; background:#e5484d; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:16px; cursor:pointer; box-shadow:0 4px 0 #a12; }\n.one-root .center{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); z-index:5; display:flex; align-items:center; gap:26px; }\n.one-root .plabel{ font-size:9px; opacity:.9; text-align:center; margin-top:8px; text-shadow:0 2px 3px rgba(0,0,0,.6); }\n.one-root .colorchip{ position:absolute; left:50%; top:calc(46% + 86px); transform:translateX(-50%); z-index:6; font-size:9px; padding:6px 12px; border-radius:6px; border:2px solid rgba(255,255,255,.5); box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gstatus{ position:absolute; left:0; right:0; top:calc(46% - 132px); z-index:6; text-align:center; font-size:11px; line-height:1.6; text-shadow:0 3px 0 rgba(0,0,0,.6); padding:0 12px; }\n.one-root .dirbadge{ position:absolute; left:50%; top:calc(46% - 104px); transform:translateX(-50%); z-index:6; font-size:20px; text-shadow:0 2px 0 rgba(0,0,0,.5); }\n.one-root .handwrap{ position:absolute; left:0; right:0; bottom:0; z-index:7; padding:6px 6px calc(env(safe-area-inset-bottom,0px) + 8px); }\n.one-root .gbtns{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; flex-wrap:wrap; }\n.one-root .hand{ display:flex; justify-content:center; align-items:flex-end; min-height:104px; }\n.one-root .hand .slot{ margin-left:-20px; transition:transform .08s; }\n.one-root .hand .slot:first-child{ margin-left:0; }\n.one-root .hand .slot.playable:hover, .one-root .hand .slot.playable:active{ transform:translateY(-16px); z-index:20; }\n.one-root .card{ display:block; image-rendering:auto; filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root img.card{ image-rendering:auto; }\n.one-root .card.disabled{ filter:brightness(.62) saturate(.7) drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root .colors{ display:flex; gap:12px; justify-content:center; margin-top:10px; }\n.one-root .colors button{ width:52px; height:52px; border-radius:6px; border:3px solid #fff; box-shadow:0 4px 0 rgba(0,0,0,.35); }\n.one-root .modalbg{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; z-index:40; }\n.one-root .modal{ background:#0a1a30; border:3px solid #2b6cff; border-radius:8px; padding:18px; width:min(92%,340px); text-align:center; box-shadow:0 10px 0 rgba(0,0,0,.5); font-size:11px; line-height:1.7; }\n.one-root .flash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:50; }\n.one-root .flash span{ font-size:11vw; color:#ffe14d; text-shadow:0 5px 0 #b5311e, 0 0 24px rgba(255,225,77,.7); opacity:0; animation:fp .6s steps(4) forwards; }\n\n  @keyframes fp{ 0%{opacity:0;transform:scale(.4)} 55%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }\n.one-root .toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; border:2px solid #444; color:#fff; padding:10px 14px; border-radius:6px; font-size:10px; z-index:60; opacity:0; transition:opacity .2s; }\n.one-root .toast.show{ opacity:1; }\n.one-root .one-timer{ position:absolute; left:50%; top:calc(46% - 150px); transform:translateX(-50%); z-index:6; width:min(58%,340px); height:10px; border:2px solid rgba(0,0,0,.55); background:rgba(0,0,0,.35); border-radius:6px; overflow:hidden; display:none; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .one-timer.on{ display:block; }\n.one-root .one-timer i{ display:block; height:100%; width:100%; background:linear-gradient(90deg,#39d353,#ffd23f,#e5484d); }\n@media (max-width:760px){ .one-root .hand{ justify-content:flex-start; overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; padding:6px 10px; scrollbar-width:none; } .one-root .hand::-webkit-scrollbar{ display:none; } .one-root .hand .slot{ margin-left:-12px; } .one-root .hand .slot:first-child{ margin-left:0; } }"
+  stEl.textContent = ".one-root canvas{ image-rendering:pixelated; image-rendering:crisp-edges; }\n.one-root, .one-root #menu{ position:absolute; inset:0; }\n.one-root{ background:#0a3;  background-size:cover; background-position:center; image-rendering:pixelated; }\n.one-root button{ border:none; border-radius:6px; padding:12px 14px; font-size:11px; cursor:pointer; color:#fff; background:#2b6cff;\n    box-shadow:0 5px 0 #17408f; font-family:inherit; margin:6px 4px 0 0; transition:transform .05s; letter-spacing:1px; }\n.one-root button:active{ transform:translateY(3px); box-shadow:0 2px 0 #17408f; }\n.one-root button.green{ background:#3fbf3f; box-shadow:0 5px 0 #1f7a1f; }\n.one-root button.grey{ background:#54687a; box-shadow:0 5px 0 #33424f; }\n.one-root button.warn{ background:#ffb020; color:#5a3d00; box-shadow:0 5px 0 #b57200; }\n.one-root button:disabled{ opacity:.45; box-shadow:none; cursor:default; }\n.one-root .hidden{ display:none !important; }\n.one-root .pod{ position:absolute; z-index:6; display:flex; flex-direction:column; align-items:center; gap:5px; }\n.one-root .pod .av{ width:60px; height:60px; }\n.one-root .pod .nm{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.35); border-radius:5px; padding:4px 8px; font-size:9px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .pod.turn .av{ filter:drop-shadow(0 0 0 #ffe14d); animation:podpulse .9s steps(2) infinite; }\n\n  @keyframes podpulse{ 0%,100%{ filter:drop-shadow(0 0 4px #ffe14d);} 50%{ filter:drop-shadow(0 0 10px #ffe14d);} }\n.one-root .seat-top{ top:5%; left:50%; transform:translateX(-50%); }\n.one-root .seat-left{ top:32%; left:12px; }\n.one-root .seat-right{ top:32%; right:12px; }\n.one-root .seat-me{ bottom:calc(25vh + 6px); left:12px; }\n.one-root .fan{ position:absolute; z-index:5; height:70px; }\n.one-root .fan .card{ position:absolute; top:0; }\n.one-root .fan-top{ top:calc(5% + 70px); left:50%; transform:translateX(-50%); }\n.one-root .fan-left{ top:calc(32% + 66px); left:12px; }\n.one-root .fan-right{ top:calc(32% + 66px); right:12px; }\n.one-root .gtop{ position:absolute; top:0; left:0; right:0; z-index:8; display:flex; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0; }\n.one-root .chip{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.3); border-radius:6px; padding:6px 10px; font-size:9px; display:flex; align-items:center; gap:6px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gx{ margin-left:auto; background:#e5484d; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:16px; cursor:pointer; box-shadow:0 4px 0 #a12; }\n.one-root .center{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); z-index:5; display:flex; align-items:center; gap:26px; }\n.one-root .plabel{ font-size:9px; opacity:.9; text-align:center; margin-top:8px; text-shadow:0 2px 3px rgba(0,0,0,.6); }\n.one-root .colorchip{ position:absolute; left:50%; top:calc(46% + 86px); transform:translateX(-50%); z-index:6; font-size:9px; padding:6px 12px; border-radius:6px; border:2px solid rgba(255,255,255,.5); box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gstatus{ position:absolute; left:50%; transform:translateX(-50%); top:calc(46% - 168px); z-index:9; text-align:center; font-size:11px; line-height:1.5; max-width:min(72%,420px); background:rgba(0,0,0,.62); border:2px solid rgba(255,255,255,.25); border-radius:8px; padding:6px 12px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .dirbadge{ position:absolute; left:50%; top:calc(46% - 104px); transform:translateX(-50%); z-index:6; font-size:20px; text-shadow:0 2px 0 rgba(0,0,0,.5); }\n.one-root .handwrap{ position:absolute; left:0; right:0; bottom:0; z-index:7; padding:6px 6px calc(env(safe-area-inset-bottom,0px) + 8px); }\n.one-root .gbtns{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; flex-wrap:wrap; }\n.one-root .hand{ display:flex; justify-content:center; align-items:flex-end; min-height:104px; }\n.one-root .hand .slot{ margin-left:-20px; transition:transform .08s; }\n.one-root .hand .slot:first-child{ margin-left:0; }\n.one-root .hand .slot.playable:hover, .one-root .hand .slot.playable:active{ transform:translateY(-16px); z-index:20; }\n.one-root .card{ display:block; image-rendering:auto; filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root img.card{ image-rendering:auto; }\n.one-root .card.disabled{ filter:brightness(.62) saturate(.7) drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root .colors{ display:flex; gap:12px; justify-content:center; margin-top:10px; }\n.one-root .colors button{ width:52px; height:52px; border-radius:6px; border:3px solid #fff; box-shadow:0 4px 0 rgba(0,0,0,.35); }\n.one-root .modalbg{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; z-index:40; }\n.one-root .modal{ background:#0a1a30; border:3px solid #2b6cff; border-radius:8px; padding:18px; width:min(92%,340px); text-align:center; box-shadow:0 10px 0 rgba(0,0,0,.5); font-size:11px; line-height:1.7; }\n.one-root .flash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:50; }\n.one-root .flash span{ font-size:11vw; color:#ffe14d; text-shadow:0 5px 0 #b5311e, 0 0 24px rgba(255,225,77,.7); opacity:0; animation:fp .6s steps(4) forwards; }\n\n  @keyframes fp{ 0%{opacity:0;transform:scale(.4)} 55%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }\n.one-root .toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; border:2px solid #444; color:#fff; padding:10px 14px; border-radius:6px; font-size:10px; z-index:60; opacity:0; transition:opacity .2s; }\n.one-root .toast.show{ opacity:1; }\n.one-root .one-timer{ position:absolute; left:50%; top:calc(46% - 128px); transform:translateX(-50%); z-index:6; width:min(58%,340px); height:10px; border:2px solid rgba(0,0,0,.55); background:rgba(0,0,0,.35); border-radius:6px; overflow:hidden; display:none; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .one-timer.on{ display:block; }\n.one-root .one-timer i{ display:block; height:100%; width:100%; background:linear-gradient(90deg,#39d353,#ffd23f,#e5484d); }\n@media (max-width:760px){ .one-root .hand{ justify-content:flex-start; overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; padding:6px 10px; scrollbar-width:none; } .one-root .hand::-webkit-scrollbar{ display:none; } .one-root .hand .slot{ margin-left:-12px; } .one-root .hand .slot:first-child{ margin-left:0; } }"
     + '\n.one-root{position:fixed;inset:0;z-index:65;overflow:hidden;color:#fff;}'
     // Force the pixel font on the whole overlay with !important so Winky's own
     // styles can never override it (this was why the plugin text looked generic).
@@ -145,34 +145,35 @@ function smoothReverse(ctx,cx,cy,r,color){ ctx.save(); ctx.strokeStyle=color; ct
   ctx.restore(); }
 
 var _cardCache={};
-function makeCardCanvas(code){
-  if(_cardCache[code]){ return copyCanvas(_cardCache[code]); }
-  var W=200,H=300; var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
-  ctx.imageSmoothingEnabled=true; ctx.lineJoin='round'; ctx.lineCap='round';
-  var pad=12, rad=28;  // EXACTLY like single player (the border is fine; the thickness came from browser scaling, fixed in cardEl)
-  // white rounded body
-  roundRectPath(ctx,2,2,W-4,H-4,rad); ctx.fillStyle='#ffffff'; ctx.fill();
+function makeCardCanvas(code, W, H){
+  W=W||200; H=H||300; var key=code+'|'+W+'|'+H;
+  if(_cardCache[key]){ return _cardCache[key]; }
+  var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
+  ctx.imageSmoothingEnabled=true; try{ ctx.imageSmoothingQuality='high'; }catch(e){} ctx.lineJoin='round'; ctx.lineCap='round';
+  var pad=Math.max(2, Math.round(W*0.045));   // THIN border (~4.5% of width)
+  var rad=Math.max(4, Math.round(W*0.14));
+  var irad=Math.max(3, rad-Math.round(pad*0.5));
+  roundRectPath(ctx,0.5,0.5,W-1,H-1,rad); ctx.fillStyle='#ffffff'; ctx.fill();
   if(code==='back'){
-    roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.fillStyle='#e5484d'; ctx.fill();
-    if(BACK_READY){ ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip(); ctx.drawImage(BACKIMG,pad,pad,W-2*pad,H-2*pad); ctx.restore(); }
+    roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.fillStyle='#e5484d'; ctx.fill();
+    if(BACK_READY){ ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip(); ctx.drawImage(BACKIMG,pad,pad,W-2*pad,H-2*pad); ctx.restore(); }
     else { drawPlaque(ctx,W,H); smoothText(ctx,'ONE',W/2,H/2,Math.round(H*0.13),'#e5484d'); }
-    _cardCache[code]=cv; return copyCanvas(cv);
+    _cardCache[key]=cv; return cv;
   }
   var k=cardKind(code), col=cardColor(code);
   if(k==='wild'||k==='wild4'){
-    ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip();
+    ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip();
     var mx=W/2,my=H/2;
-    ctx.fillStyle=COLHEX.R; ctx.fillRect(0,0,mx,my); ctx.fillStyle=COLHEX.G; ctx.fillRect(mx,0,W-mx,my);
-    ctx.fillStyle=COLHEX.B; ctx.fillRect(0,my,mx,H-my); ctx.fillStyle=COLHEX.Y; ctx.fillRect(mx,my,W-mx,H-my);
+    ctx.fillStyle=COLHEX.R; ctx.fillRect(pad,pad,mx-pad,my-pad); ctx.fillStyle=COLHEX.G; ctx.fillRect(mx,pad,W-pad-mx,my-pad);
+    ctx.fillStyle=COLHEX.B; ctx.fillRect(pad,my,mx-pad,H-pad-my); ctx.fillStyle=COLHEX.Y; ctx.fillRect(mx,my,W-pad-mx,H-pad-my);
     ctx.restore();
     drawPlaque(ctx,W,H);
     smoothText(ctx, k==='wild'?'\u2605':'+4', W/2, H/2, Math.round(H*(k==='wild'?0.20:0.17)), '#222');
     drawCorners(ctx,W,H,cardShortForCorner(code),'#222');
-    _cardCache[code]=cv; return copyCanvas(cv);
+    _cardCache[key]=cv; return cv;
   }
-  // colored rounded inner + subtle bottom shade
-  roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.fillStyle=COLHEX[col]; ctx.fill();
-  ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip(); ctx.fillStyle=COLDARK[col]; ctx.fillRect(pad,H-pad-14,W-2*pad,14); ctx.restore();
+  roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.fillStyle=COLHEX[col]; ctx.fill();
+  ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip(); ctx.fillStyle=COLDARK[col]; ctx.fillRect(pad,H-pad-Math.round(H*0.05),W-2*pad,Math.round(H*0.05)); ctx.restore();
   drawPlaque(ctx,W,H);
   var cx=W/2, cy=H/2;
   if(k==='num'){ smoothText(ctx, code.slice(1), cx, cy, Math.round(H*0.32), COLHEX[col]); }
@@ -180,7 +181,7 @@ function makeCardCanvas(code){
   else if(k==='reverse'){ smoothReverse(ctx,cx,cy,H*0.15,COLHEX[col]); }
   else if(k==='drawtwo'){ smoothText(ctx,'+2',cx,cy,Math.round(H*0.24),COLHEX[col]); }
   drawCornerMark(ctx,W,H,k,code,COLHEX[col]);
-  _cardCache[code]=cv; return copyCanvas(cv);
+  _cardCache[key]=cv; return cv;
 }
 function cardShortForCorner(code){ var k=cardKind(code); if(k==='num')return code.slice(1); if(k==='skip')return 'S'; if(k==='reverse')return 'R'; if(k==='drawtwo')return '+2'; if(k==='wild')return 'W'; return '+4'; }
 function smallCorner(ctx,str,x,y,color){ // fs=1 mini
@@ -196,17 +197,15 @@ function cardShort(c){ var k=cardKind(c); if(k==='num')return c.slice(1); if(k==
 /* Public: cardEl(code, sizeClass) -> canvas element sized for display */
 var SIZES={ '': [66,98], 'sm':[46,68], 'md':[52,78], 'big':[80,118] };
 function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; 
-  var big=makeCardCanvas(code); // 200x300 master (identical to single player)
-  // Downscale to display size OURSELVES with high-quality smoothing, at device
-  // pixel ratio, so the result is crisp AND has a thin border on EVERY device.
-  // (Letting the browser CSS-scale the big canvas made borders look thick on
-  //  desktop in the Winky page; doing the scale here removes that variable.)
-  var dpr=1; try{ dpr=Math.max(1,Math.min(3, window.devicePixelRatio||1)); }catch(e){}
   var w=sz[0], h=sz[1];
-  var out=document.createElement('canvas'); out.width=Math.round(w*dpr); out.height=Math.round(h*dpr);
+  var dpr=1; try{ dpr=Math.max(1,Math.min(3, window.devicePixelRatio||1)); }catch(e){}
+  // Draw the card ONCE at exactly the final device-pixel resolution. Nothing is
+  // scaled by the browser, so the thin border is identical on desktop & mobile.
+  var src=makeCardCanvas(code, Math.round(w*dpr), Math.round(h*dpr));
+  // return a fresh element (cache holds the master; clone via drawImage 1:1)
+  var out=document.createElement('canvas'); out.width=src.width; out.height=src.height;
   out.style.width=w+'px'; out.style.height=h+'px'; out.className='card '+(cls||''); out.style.imageRendering='auto';
-  var oc=out.getContext('2d'); oc.imageSmoothingEnabled=true; try{ oc.imageSmoothingQuality='high'; }catch(e){}
-  oc.drawImage(big, 0,0, out.width, out.height);
+  var oc=out.getContext('2d'); oc.imageSmoothingEnabled=false; oc.drawImage(src,0,0);
   return out; }
 var _avCache={};
 function makeAvatar(kind){
@@ -352,7 +351,7 @@ views.oneGame=function(p){
   // Turn timer bar (30s). Appended here so it exists before first paint.
   try{ var _tb=el2('div','one-timer'); _tb.id='oneTimer'; var _tf=el2('i',null,null); _tf.id='oneTimerFill'; _tb.appendChild(_tf); root.appendChild(_tb); }catch(e){}
   var st=null, lastSeq=-1, botTimer=null, actedSeq=-1, endBg=null, rematchBg=null, otherAv={nick:p.otherNick};
-  var TURN_MS=30000, turnTimer=null, turnToken=null, lastChangeTs=Date.now();
+  var TURN_MS=30000, turnTimer=null, turnToken=null, lastChangeTs=Date.now(), lastUpdatedAt=null;
   function flash(t){ var f=el2('div','flash'); var s=el2('span',null,t); f.appendChild(s); root.appendChild(f); setTimeout(function(){ try{f.remove();}catch(e){} },650); }
   try{ if(p.otherId){ rest('/users?id=eq.'+p.otherId+'&select=nickname,avatar_id,avatar_url').then(function(r){ if(r&&r[0]){ otherAv={nick:r[0].nickname,id:r[0].avatar_id,url:r[0].avatar_url}; paint(); } }).catch(function(){}); } }catch(e){}
 
@@ -403,7 +402,9 @@ views.oneGame=function(p){
   var myMustPlay=false; // LOCAL only — never serialized into the shared row, so
                         // it can never leave the other player's controls disabled.
 
-  function pushState(){ st.seq=(st.seq||0)+1; actedSeq=st.seq; lastSeq=st.seq; lastChangeTs=Date.now(); G.state=st; try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:st,updated_at:new Date().toISOString()}}); }catch(e){} paint(); }
+  function pushState(){ st.seq=(st.seq||0)+1; actedSeq=st.seq; lastSeq=st.seq; lastChangeTs=Date.now();
+    var now=new Date().toISOString(); lastUpdatedAt=now; G.state=st;
+    try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:st,updated_at:now}}); }catch(e){} paint(); }
   /* ---- 30s turn timer with bar + auto-move ---- */
   function showTimer(on){ var t=$('oneTimer'); if(t) t.classList.toggle('on', !!on); }
   function stopTurnTimer(){ if(turnTimer){ clearInterval(turnTimer); turnTimer=null; } showTimer(false); turnToken=null; }
@@ -433,17 +434,21 @@ views.oneGame=function(p){
     // the old `seq!==actedSeq` check was ALWAYS false after a human move (pushState
     // set actedSeq=seq), so bots never played. Removed.
     var slot=curSlot(st); if(isBot(st,slot)){ botTimer=setTimeout(function(){ botTimer=null; botPlayOnce(st,slot,diff); pushState(); },750); return; }
-    // AFK fallback: if it's a HUMAN's turn (or their +4 decision) and nothing has
-    // changed for 45s (e.g. they closed the tab, so their own 30s timer can't
-    // fire), the host makes an automatic move so the game never stalls forever.
-    var deciderHuman = st.pending4 ? (!isBot(st,st.pending4.target)?st.pending4.target:null) : (!isBot(st,slot)?slot:null);
-    if(deciderHuman && (Date.now()-lastChangeTs>45000)){ botTimer=setTimeout(function(){ botTimer=null; engineAutoMove(st, deciderHuman); pushState(); }, 50); } }
+    // NOTE: no host auto-move for humans here. Each acting player's own 30s timer
+    // makes their auto-move. A host fallback wrote the row at the SAME time as the
+    // player, producing two writes with the same seq -> the two clients diverged
+    // and never reconverged. Removed to keep exactly ONE writer per turn. }
+  }
 
   function applyRow(r){ if(!r)return;
     if(host && r.status==='active' && !r.state){ var A={id:r.from_id,nick:r.from_nick}, B={id:r.to_id,nick:r.to_nick}; var seeded=seed(p.mode||r.from_char, A, B); try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:seeded,updated_at:new Date().toISOString()}}); }catch(e){} st=seeded; G.state=st; lastSeq=st.seq; paint(); return; }
     if(r.status!=='active'){ $('gStatus').textContent=T2('waitAccept'); return; }
     if(!r.state){ $('gStatus').textContent=T2('waitOpp'); return; }
-    if(r.state.seq!==lastSeq){ st=r.state; G.state=st; lastSeq=st.seq; lastChangeTs=Date.now();
+    // Convergence: adopt the server row whenever it was written after what we
+    // last saw (updated_at), OR the seq differs. Using updated_at guarantees both
+    // clients ALWAYS end up on the latest write, so they can never stay diverged.
+    var changed = (r.updated_at && r.updated_at!==lastUpdatedAt) || (r.state.seq!==lastSeq);
+    if(changed){ lastUpdatedAt=r.updated_at||lastUpdatedAt; st=r.state; G.state=st; lastSeq=st.seq; lastChangeTs=Date.now();
       // ---- Rematch negotiation takes priority over the end screen ----
       if(st.rematch){
         if(st.rematch.by && st.rematch.accepted && st.rematch.by!==st.rematch.accepted){
