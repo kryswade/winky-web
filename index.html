@@ -128,6 +128,24 @@
   .bubble .who{font-size:12px;color:#25d366;margin-bottom:2px}
   .bubble .ticks{font-size:12px;text-align:right;margin-top:2px;line-height:1;color:#9fd3bf}
   .bubble .ticks.read{color:#33ccff}
+  /* ===== WhatsApp-style voice message bubble ===== */
+  .wc-voice{ display:flex; align-items:center; gap:10px; min-width:210px; max-width:250px; padding:2px 0; }
+  .wc-voice .wc-av{ position:relative; width:44px; height:44px; flex:0 0 44px; border-radius:50%; overflow:visible; }
+  .wc-voice .wc-av .avatar{ width:44px; height:44px; border-radius:50%; font-size:20px; }
+  .wc-voice .wc-av img.avatar{ object-fit:cover; }
+  .wc-voice .wc-mic{ position:absolute; right:-2px; bottom:-2px; width:18px; height:18px; border-radius:50%;
+    background:#25d366; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px;
+    box-shadow:0 0 0 2px var(--bubbleTheirs); }
+  .bubble.mine .wc-voice .wc-mic{ box-shadow:0 0 0 2px var(--bubbleMine); }
+  .wc-voice .wc-play{ flex:0 0 34px; width:34px; height:34px; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(255,255,255,.14); color:#fff; font-size:15px; display:flex; align-items:center; justify-content:center; }
+  :root.light .wc-voice .wc-play{ background:rgba(0,0,0,.10); color:#111; }
+  .wc-voice .wc-mid{ flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .wc-voice .wc-wave{ position:relative; height:26px; display:flex; align-items:center; gap:2px; cursor:pointer; overflow:hidden; }
+  .wc-voice .wc-wave .wc-bar{ flex:1; min-width:2px; max-width:3px; border-radius:2px; background:rgba(255,255,255,.35); }
+  :root.light .wc-voice .wc-wave .wc-bar{ background:rgba(0,0,0,.25); }
+  .wc-voice .wc-wave .wc-bar.played{ background:#25d366; }
+  .wc-voice .wc-time{ font-size:11px; opacity:.75; line-height:1; }
   .bubble .msgmenu{position:absolute;top:2px;right:6px;cursor:pointer;opacity:.5;font-size:14px;line-height:1;padding:2px}
   .bubble:hover .msgmenu{opacity:.9}
   .bubble .quote{border-left:3px solid var(--accent);padding:3px 8px;margin-bottom:5px;font-size:13px;opacity:.85;background:rgba(127,127,127,.12);border-radius:6px;white-space:pre-wrap}
@@ -426,7 +444,7 @@ const I18N={
     verify:'Verify (blue check)', unverify:'Remove verification', verifiedOn:'User verified', verifiedOff:'Verification removed', sendDmReq:'💬 Send DM request',
     status:'Status', setStatus:'✏️ Set status', statusPrompt:'Your status (max 100 chars):', statusUpdated:'Status updated', noContactsYet:'No contacts yet (accepted DMs)', searchContact:'Search contacts…', addSelected:'➕ Add selected', selectContacts:'Select contacts to add', joinByName:'🔎 Join by name', searchGroup:'Search group by name…', requestJoin:'Request to join', joinRequested:'Join request sent', joinRequests:'📥 Join requests', noJoinReq:'No join requests', approve:'✅ Approve', alreadyRequested:'Already requested', noGroupsFound:'No groups found', pickAtLeastOne:'Select at least one contact', membersAdded:'Members added',
     preventReadd:'Also prevent being re-added to this group?', yes:'Yes', no:'No',
-    sendPhoto:'Send', retake:'Retake', createSticker:'Create sticker', cuttingOut:'Cutting out…', myStickers:'My stickers', giphyErr:'No results. A free Giphy API key may be required.', setGiphyKey:'Set Giphy key', giphyKeyPrompt:'Paste your free Giphy API key:', gifNoWatch:'GIF (not viewable on watch)', slideCancel:'‹ slide to cancel', releaseCancel:'release to cancel', holdToRec:'Hold to record', micBlocked:'Microphone blocked. Allow it in site settings.', camBlocked:'Camera blocked. Allow it in site settings.', syncKeys:'🔑 Sync my keys', syncKeysDone:'Keys synced', syncKeysConfirm:'Publish all your local chat keys to the server? Do this from the device that reads the messages correctly.', chooseFighter:'Choose your fighter', challengeBtn:'⚔️ Challenge!', challengeSent:'Challenge sent', waitAccept:'Waiting for opponent to accept…', waitOpponent:'Waiting for opponent…', getReady:'Get ready!', rematch:'⚔️ Rematch', exit:'Exit', declinedGame:'Opponent declined the challenge', rematchIncoming:'wants a rematch!', gameChallengeMsg:'challenged you to Jan Ken Pon!', gamesTitle:'Choose a game', gameJkp:'Jan Ken Pon', gamePk:'Penalties', pkChallengeMsg:'challenged you to Penalties!', roleKeeperShort:'Keeper', roleAttackerShort:'Striker', pkShootHint:'Pick where to SHOOT', pkDiveHint:'Pick where to DIVE', pkGoal:'GOAL!', pkSave:'SAVE!', youWin:'YOU WIN!', youLose:'YOU LOSE', pkFinal:'Final', gamesBtn:'Games', },
+    sendPhoto:'Send', retake:'Retake', createSticker:'Create sticker', cuttingOut:'Cutting out…', myStickers:'My stickers', giphyErr:'No results. A free Giphy API key may be required.', setGiphyKey:'Set Giphy key', giphyKeyPrompt:'Paste your free Giphy API key:', gifNoWatch:'GIF (not viewable on watch)', slideCancel:'‹ slide to cancel', releaseCancel:'release to cancel', holdToRec:'Hold to record', micBlocked:'Microphone blocked. Allow it in site settings.', camBlocked:'Camera blocked. Allow it in site settings.', syncKeys:'🔑 Sync my keys', syncKeysDone:'Keys synced', syncKeysConfirm:'Publish all your local chat keys to the server? Do this from the device that reads the messages correctly.', chooseFighter:'Choose your fighter', challengeBtn:'⚔️ Challenge!', challengeSent:'Challenge sent', waitAccept:'Waiting for opponent to accept…', waitOpponent:'Waiting for opponent…', getReady:'Get ready!', rematch:'⚔️ Rematch', exit:'Exit', declinedGame:'Opponent declined the challenge', rematchIncoming:'wants a rematch!', gameChallengeMsg:'challenged you to Jan Ken Pon!', gamesTitle:'Choose a game', gameJkp:'Jan Ken Pon', gameOne:'ONE (cards)', oneChallengeMsg:'challenged you to ONE!', gamePk:'Penalties', pkChallengeMsg:'challenged you to Penalties!', roleKeeperShort:'Keeper', roleAttackerShort:'Striker', pkShootHint:'Pick where to SHOOT', pkDiveHint:'Pick where to DIVE', pkGoal:'GOAL!', pkSave:'SAVE!', youWin:'YOU WIN!', youLose:'YOU LOSE', pkFinal:'Final', gamesBtn:'Games', },
   it:{ signIn:'Accedi', nickname:'Soprannome', pin:'PIN (6 cifre)', login:'➡️ Accedi', register:'✨ Registrati',
     globalChat:'🌐 Chat globale', directMessages:'💬 Messaggi diretti', groupChats:'👥 Chat di gruppo', myProfile:'👤 Profilo', adminPanel:'🛡️ Pannello admin',
     language:'🌐 Lingua', theme:'Tema', settings:'Impostazioni', themeLight:'Chiaro', themeDark:'Scuro', searchDmPh:'Cerca nome o messaggio…', noResults:'Nessun risultato', direct:'💬 Diretti', groups:'👥 Gruppi', global:'🌐 Globale', profile:'👤 Profilo',
@@ -450,7 +468,7 @@ const I18N={
     verify:'Verifica (spunta blu)', unverify:'Rimuovi verifica', verifiedOn:'Utente verificato', verifiedOff:'Verifica rimossa', sendDmReq:'💬 Invia richiesta DM',
     status:'Stato', setStatus:'✏️ Imposta stato', statusPrompt:'Il tuo stato (max 100 caratteri):', statusUpdated:'Stato aggiornato', noContactsYet:'Nessun contatto (DM accettati)', searchContact:'Cerca contatti…', addSelected:'➕ Aggiungi selezionati', selectContacts:'Seleziona i contatti da aggiungere', joinByName:'🔎 Entra per nome', searchGroup:'Cerca gruppo per nome…', requestJoin:'Richiedi di entrare', joinRequested:'Richiesta di ingresso inviata', joinRequests:'📥 Richieste di ingresso', noJoinReq:'Nessuna richiesta', approve:'✅ Approva', alreadyRequested:'Già richiesto', noGroupsFound:'Nessun gruppo trovato', pickAtLeastOne:'Seleziona almeno un contatto', membersAdded:'Membri aggiunti',
     preventReadd:'Impedire anche di essere riaggiunto a questo gruppo?', yes:'Sì', no:'No',
-    sendPhoto:'Invia', retake:'Riscatta', createSticker:'Crea sticker', cuttingOut:'Ritaglio in corso…', myStickers:'I miei sticker', giphyErr:'Nessun risultato. Potrebbe servire una chiave API Giphy gratuita.', setGiphyKey:'Imposta chiave Giphy', giphyKeyPrompt:'Incolla la tua chiave API Giphy gratuita:', gifNoWatch:'GIF (non visualizzabile su smartwatch)', slideCancel:'‹ scorri per annullare', releaseCancel:'rilascia per annullare', holdToRec:'Tieni premuto per registrare', micBlocked:'Microfono bloccato. Consentilo nelle impostazioni del sito.', camBlocked:'Fotocamera bloccata. Consentila nelle impostazioni del sito.', syncKeys:'🔑 Sincronizza chiavi', syncKeysDone:'Chiavi sincronizzate', syncKeysConfirm:'Pubblicare tutte le chiavi locali sul server? Fallo dal dispositivo che legge i messaggi correttamente.', chooseFighter:'Scegli il tuo lottatore', challengeBtn:'⚔️ Sfida!', challengeSent:'Sfida inviata', waitAccept:'In attesa che l\u0027avversario accetti…', waitOpponent:'In attesa dell\u0027avversario…', getReady:'Preparati!', rematch:'⚔️ Rivincita', exit:'Esci', declinedGame:'L\u0027avversario ha rifiutato la sfida', rematchIncoming:'vuole la rivincita!', gameChallengeMsg:'ti ha sfidato a Jan Ken Pon!', gamesTitle:'Scegli un gioco', gameJkp:'Jan Ken Pon', gamePk:'Rigori', pkChallengeMsg:'ti ha sfidato ai Rigori!', roleKeeperShort:'Portiere', roleAttackerShort:'Attaccante', pkShootHint:'Scegli dove TIRARE', pkDiveHint:'Scegli dove PARARE', pkGoal:'GOL!', pkSave:'PARATA!', youWin:'HAI VINTO!', youLose:'HAI PERSO', pkFinal:'Finale', gamesBtn:'Giochi', },
+    sendPhoto:'Invia', retake:'Riscatta', createSticker:'Crea sticker', cuttingOut:'Ritaglio in corso…', myStickers:'I miei sticker', giphyErr:'Nessun risultato. Potrebbe servire una chiave API Giphy gratuita.', setGiphyKey:'Imposta chiave Giphy', giphyKeyPrompt:'Incolla la tua chiave API Giphy gratuita:', gifNoWatch:'GIF (non visualizzabile su smartwatch)', slideCancel:'‹ scorri per annullare', releaseCancel:'rilascia per annullare', holdToRec:'Tieni premuto per registrare', micBlocked:'Microfono bloccato. Consentilo nelle impostazioni del sito.', camBlocked:'Fotocamera bloccata. Consentila nelle impostazioni del sito.', syncKeys:'🔑 Sincronizza chiavi', syncKeysDone:'Chiavi sincronizzate', syncKeysConfirm:'Pubblicare tutte le chiavi locali sul server? Fallo dal dispositivo che legge i messaggi correttamente.', chooseFighter:'Scegli il tuo lottatore', challengeBtn:'⚔️ Sfida!', challengeSent:'Sfida inviata', waitAccept:'In attesa che l\u0027avversario accetti…', waitOpponent:'In attesa dell\u0027avversario…', getReady:'Preparati!', rematch:'⚔️ Rivincita', exit:'Esci', declinedGame:'L\u0027avversario ha rifiutato la sfida', rematchIncoming:'vuole la rivincita!', gameChallengeMsg:'ti ha sfidato a Jan Ken Pon!', gamesTitle:'Scegli un gioco', gameJkp:'Jan Ken Pon', gameOne:'ONE (carte)', oneChallengeMsg:'ti ha sfidato a ONE!', gamePk:'Rigori', pkChallengeMsg:'ti ha sfidato ai Rigori!', roleKeeperShort:'Portiere', roleAttackerShort:'Attaccante', pkShootHint:'Scegli dove TIRARE', pkDiveHint:'Scegli dove PARARE', pkGoal:'GOL!', pkSave:'PARATA!', youWin:'HAI VINTO!', youLose:'HAI PERSO', pkFinal:'Finale', gamesBtn:'Giochi', },
   es:{ signIn:'Iniciar sesión', nickname:'Apodo', pin:'PIN (6 dígitos)', login:'➡️ Entrar', register:'✨ Registrarse',
     globalChat:'🌐 Chat global', directMessages:'💬 Mensajes directos', groupChats:'👥 Chats de grupo', myProfile:'👤 Perfil', adminPanel:'🛡️ Panel admin',
     language:'🌐 Idioma', theme:'Tema', settings:'Ajustes', themeLight:'Claro', themeDark:'Oscuro', searchDmPh:'Buscar nombre o mensaje…', noResults:'Sin resultados', direct:'💬 Directos', groups:'👥 Grupos', global:'🌐 Global', profile:'👤 Perfil',
@@ -474,7 +492,7 @@ const I18N={
     verify:'Verificar (check azul)', unverify:'Quitar verificación', verifiedOn:'Usuario verificado', verifiedOff:'Verificación quitada', sendDmReq:'💬 Enviar solicitud DM',
     status:'Estado', setStatus:'✏️ Definir estado', statusPrompt:'Tu estado (máx 100 caracteres):', statusUpdated:'Estado actualizado', noContactsYet:'Sin contactos (DM aceptados)', searchContact:'Buscar contactos…', addSelected:'➕ Añadir seleccionados', selectContacts:'Selecciona los contactos a añadir', joinByName:'🔎 Unirse por nombre', searchGroup:'Buscar grupo por nombre…', requestJoin:'Solicitar unirse', joinRequested:'Solicitud de ingreso enviada', joinRequests:'📥 Solicitudes de ingreso', noJoinReq:'Sin solicitudes', approve:'✅ Aprobar', alreadyRequested:'Ya solicitado', noGroupsFound:'Sin grupos', pickAtLeastOne:'Selecciona al menos un contacto', membersAdded:'Miembros añadidos',
     preventReadd:'¿Impedir también que te vuelvan a añadir a este grupo?', yes:'Sí', no:'No',
-    sendPhoto:'Enviar', retake:'Repetir', createSticker:'Crear sticker', cuttingOut:'Recortando…', myStickers:'Mis stickers', giphyErr:'Sin resultados. Puede que necesites una clave API de Giphy gratuita.', setGiphyKey:'Definir clave Giphy', giphyKeyPrompt:'Pega tu clave API de Giphy gratuita:', gifNoWatch:'GIF (no visible en smartwatch)', slideCancel:'‹ desliza para cancelar', releaseCancel:'suelta para cancelar', holdToRec:'Mantén pulsado para grabar', micBlocked:'Micrófono bloqueado. Actívalo en los ajustes del sitio.', camBlocked:'Cámara bloqueada. Actívala en los ajustes del sitio.', syncKeys:'🔑 Sincronizar claves', syncKeysDone:'Claves sincronizadas', syncKeysConfirm:'¿Publicar todas tus claves locales en el servidor? Hazlo desde el dispositivo que lee los mensajes correctamente.', chooseFighter:'Elige tu luchador', challengeBtn:'⚔️ ¡Desafiar!', challengeSent:'Desafío enviado', waitAccept:'Esperando que el rival acepte…', waitOpponent:'Esperando al rival…', getReady:'¡Prepárate!', rematch:'⚔️ Revancha', exit:'Salir', declinedGame:'El rival rechazó el desafío', rematchIncoming:'quiere la revancha!', gameChallengeMsg:'te ha desafiado a Jan Ken Pon!', gamesTitle:'Elige un juego', gameJkp:'Jan Ken Pon', gamePk:'Penales', pkChallengeMsg:'te ha desafiado a Penales!', roleKeeperShort:'Portero', roleAttackerShort:'Delantero', pkShootHint:'Elige donde DISPARAR', pkDiveHint:'Elige donde ATAJAR', pkGoal:'¡GOL!', pkSave:'¡ATAJADA!', youWin:'¡GANASTE!', youLose:'PERDISTE', pkFinal:'Final', gamesBtn:'Juegos', }
+    sendPhoto:'Enviar', retake:'Repetir', createSticker:'Crear sticker', cuttingOut:'Recortando…', myStickers:'Mis stickers', giphyErr:'Sin resultados. Puede que necesites una clave API de Giphy gratuita.', setGiphyKey:'Definir clave Giphy', giphyKeyPrompt:'Pega tu clave API de Giphy gratuita:', gifNoWatch:'GIF (no visible en smartwatch)', slideCancel:'‹ desliza para cancelar', releaseCancel:'suelta para cancelar', holdToRec:'Mantén pulsado para grabar', micBlocked:'Micrófono bloqueado. Actívalo en los ajustes del sitio.', camBlocked:'Cámara bloqueada. Actívala en los ajustes del sitio.', syncKeys:'🔑 Sincronizar claves', syncKeysDone:'Claves sincronizadas', syncKeysConfirm:'¿Publicar todas tus claves locales en el servidor? Hazlo desde el dispositivo que lee los mensajes correctamente.', chooseFighter:'Elige tu luchador', challengeBtn:'⚔️ ¡Desafiar!', challengeSent:'Desafío enviado', waitAccept:'Esperando que el rival acepte…', waitOpponent:'Esperando al rival…', getReady:'¡Prepárate!', rematch:'⚔️ Revancha', exit:'Salir', declinedGame:'El rival rechazó el desafío', rematchIncoming:'quiere la revancha!', gameChallengeMsg:'te ha desafiado a Jan Ken Pon!', gamesTitle:'Elige un juego', gameJkp:'Jan Ken Pon', gameOne:'ONE (cartas)', oneChallengeMsg:'te ha desafiado a ONE!', gamePk:'Penales', pkChallengeMsg:'te ha desafiado a Penales!', roleKeeperShort:'Portero', roleAttackerShort:'Delantero', pkShootHint:'Elige donde DISPARAR', pkDiveHint:'Elige donde ATAJAR', pkGoal:'¡GOL!', pkSave:'¡ATAJADA!', youWin:'¡GANASTE!', youLose:'PERDISTE', pkFinal:'Final', gamesBtn:'Juegos', }
 };
 function detectLang(){ const l=(navigator.language||navigator.userLanguage||'en').slice(0,2).toLowerCase(); return (l==='it'||l==='es')?l:'en'; }
 function validNick(n){ return /^[a-zA-Z0-9]{2,15}$/.test(String(n)); }
@@ -917,11 +935,69 @@ function presenceLabel(pr){ if(!pr) return ''; if(pr.label) return pr.label; ret
 const MEDIA_PREFIX='WKM1|';
 function parseMedia(t){if(!t||t.indexOf(MEDIA_PREFIX)!==0)return null;const p=t.split('|');return {kind:p[1],mime:p[2],b64:p.slice(3).join('|')};}
 function isStickerMsg(body){ const md=parseMedia(body); return !!(md && md.kind==='stk'); }
-function bubbleBody(text){const media=parseMedia(text);if(media){if(media.kind==='img'||media.kind==='gif'||media.kind==='stk'){const img=document.createElement('img');let src;if(media.mime==='url2'){ const ps=String(media.b64).split('|'); src=ps[1]||ps[0]; } else if(media.mime==='url'){ src=media.b64; } else { src='data:'+media.mime+';base64,'+media.b64; } img.src=src;img.style.maxWidth=(media.kind==='stk')?'150px':'210px';img.style.borderRadius=(media.kind==='stk')?'0':'10px';img.style.display='block';img.loading='lazy';if(media.kind!=='stk'){img.style.cursor='pointer';img.onclick=()=>{ const w=window.open(src,'_blank'); };}return img;}if(media.kind==='aud'){const a=document.createElement('audio');a.controls=true;a.preload='metadata';a.src='data:'+media.mime+';base64,'+media.b64;a.style.maxWidth='230px';a.style.height='38px';
-  a.addEventListener('play',()=>{window.__wcAudioPlaying=(window.__wcAudioPlaying||0)+1;});
-  const dec=()=>{window.__wcAudioPlaying=Math.max(0,(window.__wcAudioPlaying||1)-1);};
-  a.addEventListener('pause',dec);a.addEventListener('ended',dec);
-  return a;}}const s=document.createElement('span');s.className='bubbletext';s.appendChild(document.createTextNode(text));return s;}
+/* WhatsApp-style voice message: small avatar + mic badge, play/pause, a seekable
+   waveform and a time readout. opts:{mine, avatar:{nick,id,url}} are optional. */
+function wcVoiceBubble(mime, b64, opts){
+  opts = opts || {};
+  const wrap = document.createElement('div'); wrap.className='wc-voice';
+  // Avatar with mic badge
+  const avBox = document.createElement('div'); avBox.className='wc-av';
+  const av = opts.avatar || {};
+  avBox.appendChild(avatarEl(av.nick, av.id, av.url));
+  const mic = document.createElement('div'); mic.className='wc-mic'; mic.textContent='\uD83C\uDFA4';
+  avBox.appendChild(mic); wrap.appendChild(avBox);
+  // Play/pause button
+  const btn = document.createElement('button'); btn.className='wc-play'; btn.type='button'; btn.textContent='\u25B6'; // ▶
+  wrap.appendChild(btn);
+  // Middle: waveform + time
+  const mid = document.createElement('div'); mid.className='wc-mid';
+  const wave = document.createElement('div'); wave.className='wc-wave';
+  const N = 30, bars = [];
+  // Deterministic pseudo-waveform seeded from the payload so it's stable per msg.
+  let seed = (b64 ? b64.length : 7) * 2654435761 >>> 0;
+  const rnd = () => { seed ^= seed<<13; seed>>>=0; seed ^= seed>>17; seed ^= seed<<5; seed>>>=0; return (seed%1000)/1000; };
+  for(let i=0;i<N;i++){ const bar=document.createElement('div'); bar.className='wc-bar';
+    const h=6+Math.round(rnd()*18); bar.style.height=h+'px'; wave.appendChild(bar); bars.push(bar); }
+  mid.appendChild(wave);
+  const time = document.createElement('div'); time.className='wc-time'; time.textContent='0:00';
+  mid.appendChild(time); wrap.appendChild(mid);
+  // Hidden audio element drives everything.
+  const a = document.createElement('audio'); a.preload='metadata'; a.src='data:'+mime+';base64,'+b64;
+  const fmt = (s)=>{ s=Math.max(0,Math.floor(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+  // MediaRecorder blobs / many data-URI MP3s report duration = Infinity/NaN until
+  // a seek forces the browser to compute it. Without a real duration the green
+  // progress can't advance. We resolve it with the known "seek to a huge time"
+  // trick, and keep a fallback estimate so the fill ALWAYS advances.
+  let dur = 0, durKnown = false, seekFixing = false, estMax = 0;
+  const setDur = (d)=>{ if(isFinite(d) && d>0){ dur=d; durKnown=true; time.textContent=fmt(d); } };
+  a.addEventListener('loadedmetadata',()=>{
+    if(isFinite(a.duration) && a.duration>0){ setDur(a.duration); }
+    else if(!seekFixing){ seekFixing=true; try{ a.currentTime=1e101; }catch(e){} }
+  });
+  a.addEventListener('durationchange',()=>{ if(isFinite(a.duration) && a.duration>0) setDur(a.duration); });
+  a.addEventListener('seeked',()=>{ if(seekFixing){ seekFixing=false; setDur(a.duration); try{ a.currentTime=0; }catch(e){} paint(); } });
+  const paint = ()=>{
+    let frac;
+    if(durKnown && dur>0){ frac=a.currentTime/dur; }
+    else { estMax=Math.max(estMax, a.currentTime, 1); frac=a.currentTime/(estMax*1.15); } // fallback: still advances
+    frac=Math.max(0, Math.min(1, frac||0));
+    const upto=Math.round(frac*N);
+    for(let i=0;i<N;i++) bars[i].classList.toggle('played', i<upto);
+  };
+  a.addEventListener('timeupdate',()=>{ if(seekFixing) return; paint(); if(a.currentTime>0) time.textContent=fmt(a.currentTime); });
+  // Global play-count so recording is blocked while a note plays (existing behavior).
+  a.addEventListener('play',()=>{ btn.textContent='\u23F8'; window.__wcAudioPlaying=(window.__wcAudioPlaying||0)+1; }); // ⏸
+  const onStop=()=>{ btn.textContent='\u25B6'; window.__wcAudioPlaying=Math.max(0,(window.__wcAudioPlaying||1)-1); };
+  a.addEventListener('pause',onStop);
+  a.addEventListener('ended',()=>{ onStop(); a.currentTime=0; paint(); if(isFinite(a.duration)) time.textContent=fmt(a.duration); });
+  btn.onclick=()=>{ if(a.paused){ a.play().catch(()=>{}); } else { a.pause(); } };
+  // Seek by clicking the waveform.
+  wave.onclick=(e)=>{ const r=wave.getBoundingClientRect(); const frac=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));
+    if(a.duration){ a.currentTime=frac*a.duration; paint(); } };
+  wrap.appendChild(a);
+  return wrap;
+}
+function bubbleBody(text, opts){const media=parseMedia(text);if(media){if(media.kind==='img'||media.kind==='gif'||media.kind==='stk'){const img=document.createElement('img');let src;if(media.mime==='url2'){ const ps=String(media.b64).split('|'); src=ps[1]||ps[0]; } else if(media.mime==='url'){ src=media.b64; } else { src='data:'+media.mime+';base64,'+media.b64; } img.src=src;img.style.maxWidth=(media.kind==='stk')?'150px':'210px';img.style.borderRadius=(media.kind==='stk')?'0':'10px';img.style.display='block';img.loading='lazy';if(media.kind!=='stk'){img.style.cursor='pointer';img.onclick=()=>{ const w=window.open(src,'_blank'); };}return img;}if(media.kind==='aud'){ return wcVoiceBubble(media.mime, media.b64, opts); }}const s=document.createElement('span');s.className='bubbletext';s.appendChild(document.createTextNode(text));return s;}
 const FILE_PREFIX='WKF1|';
 function parseWinkyFile(t){ if(!t||t.indexOf(FILE_PREFIX)!==0)return null; const parts=t.split('|'); if(parts[1]!=='url')return null; const name=parts[parts.length-1]; const url=parts.slice(2,parts.length-1).join('|'); return {url,name}; }
 function fileCard(url,name){ const a=document.createElement('a'); a.href=url; a.target='_blank'; a.rel='noopener'; a.download=name||'file'; a.style.display='flex'; a.style.alignItems='center'; a.style.gap='8px'; a.style.textDecoration='none'; a.style.color='inherit'; const ic=document.createElement('div'); ic.textContent='📎'; ic.style.fontSize='22px'; const box=document.createElement('div'); const t1=document.createElement('div'); t1.textContent=name||'file'; t1.style.fontWeight='600'; t1.style.fontSize='14px'; t1.style.wordBreak='break-all'; const t2=document.createElement('div'); t2.textContent='Tap to download'; t2.style.fontSize='12px'; t2.style.opacity='.7'; box.appendChild(t1); box.appendChild(t2); a.appendChild(ic); a.appendChild(box); return a; }
@@ -1632,11 +1708,13 @@ views.dmThread=function(p){/* DETERMINISTIC per-thread key: web and watch derive
     rows.forEach(r=>{
       const b=el('div','bubble '+(r.mine?'mine':'theirs')+(isStickerMsg(r.body)?' nobg':''));
       if(r.replyText!=null){const q=el('div','quote');q.appendChild(el('div','qa',r.replyMine?'You':p.otherNick));q.appendChild(document.createTextNode((r.replyText||'').slice(0,120)));b.appendChild(q);}
-      if(r.__decrypting){ b.classList.add('wc-msg-decrypting'); const _h=el('div','wc-dec-hide'); _h.appendChild(bubbleBody(r.body)); b.appendChild(_h); }
+      // Avatar shown on voice bubbles: mine = me, theirs = the other user.
+      const _vopts={ mine:r.mine, avatar: r.mine ? {nick:App.me.nickname,id:App.me.avatar_id,url:App.me.avatar_url} : {nick:p.otherNick,id:p.avatarId,url:p.avatarUrl} };
+      if(r.__decrypting){ b.classList.add('wc-msg-decrypting'); const _h=el('div','wc-dec-hide'); _h.appendChild(bubbleBody(r.body,_vopts)); b.appendChild(_h); }
       else {
       const wf=parseWinkyFile(r.body);
       if(wf){b.appendChild(fileCard(wf.url,wf.name));}
-      else{b.appendChild(bubbleBody(r.body));if(r.edited){b.appendChild(el('span','edited','('+T('edited').toLowerCase()+')'));}}
+      else{b.appendChild(bubbleBody(r.body,_vopts));if(r.edited){b.appendChild(el('span','edited','('+T('edited').toLowerCase()+')'));}}
       }
       const mm=el('div','msgmenu','⋯');mm.onclick=(ev)=>{ev.stopPropagation();openMsgMenu(r);};b.appendChild(mm);
       const rx=reactsByMsg[r.id];
@@ -1783,7 +1861,7 @@ views.groupChat=function(p){/* DETERMINISTIC group key from the shared groupId (
     const sig=rows.map(r=>(r.mine?'1':'0')+(r.author||'')+'|'+r.body).join('~');
     if(window.__wcAudioPlaying){lastSig=sig;return;}
     if(sig===lastSig)return; lastSig=sig;
-    scroll.innerHTML='';rows.forEach(r=>{const b=el('div','bubble '+(r.mine?'mine':'theirs')+(isStickerMsg(r.body)?' nobg':''));if(!r.mine&&r.author){const wh=el('div','who');wh.style.cursor='pointer';wh.textContent=r.author;wh.onclick=()=>showUserCard(r.author,{checkContact:true});b.appendChild(wh);}b.appendChild(bubbleBody(r.body));scroll.appendChild(b);});requestAnimationFrame(()=>{scroll.scrollTop=scroll.scrollHeight+9999;});};
+    scroll.innerHTML='';rows.forEach(r=>{const b=el('div','bubble '+(r.mine?'mine':'theirs')+(isStickerMsg(r.body)?' nobg':''));if(!r.mine&&r.author){const wh=el('div','who');wh.style.cursor='pointer';wh.textContent=r.author;wh.onclick=()=>showUserCard(r.author,{checkContact:true});b.appendChild(wh);}const _vopts={ mine:r.mine, avatar: r.mine ? {nick:App.me.nickname,id:App.me.avatar_id,url:App.me.avatar_url} : {nick:r.author} };b.appendChild(bubbleBody(r.body,_vopts));scroll.appendChild(b);});requestAnimationFrame(()=>{scroll.scrollTop=scroll.scrollHeight+9999;});};
   const load=async(initial)=>{try{const order=initial?'&order=id.desc&limit=40':'&id=gt.'+lastId+'&order=id.asc';const msgs=await rest('/group_messages?group_id=eq.'+p.groupId+'&select=id,content,sender_id,sender_nick,kind'+order);let arr=Array.isArray(msgs)?(initial?msgs.slice().reverse():msgs):[];if(initial)rows=[];arr.forEach(mm=>{if(mm.id>lastId)lastId=mm.id;const mine=mm.sender_id===App.me.id;const isMedia=mm.kind==='img'||mm.kind==='aud'||mm.kind==='gif';let dbody=isMedia?mm.content:decrypt(key,mm.content||'');if(!isMedia&&(isBadKey(dbody)||dbody==='[locked]'||/^v[12]:/.test(dbody))&&legacyKey){dbody=decrypt(legacyKey,mm.content||'');}let bad=false;if(!isMedia&&(isBadKey(dbody)||dbody==='[locked]'||/^v[12]:/.test(dbody))){bad=true;dbody='🔒 '+T('cantDecrypt');}rows.push({body:dbody,mine,author:mine?null:(mm.sender_nick||'???'),__bad:bad});});if(rows.length>80)rows=rows.slice(-80);setGrpSeen(p.groupId,lastId);if(arr.length)render();
     /* deterministic group key: no keybag overwrite (kept stable to avoid re-introducing divergence) */
   }catch(e){}};
@@ -1933,8 +2011,9 @@ try{ setInterval(()=>{ if(App.me) refreshBadges(); }, 8000); }catch(e){}
    same fields the watch client uses, so cross-device play keeps working. */
 window.WinkyGames = window.WinkyGames || { _reg:{}, register:function(d){ this._reg[d.id]=d; }, get:function(id){ return this._reg[id]; } };
 const GAME_PLUGINS = [
-  { id:'jankenpon', src:'plugins/jankenpon.js', labelKey:'gameJkp', icon:'\u270A', challengeMsgKey:'gameChallengeMsg', match:function(fc){ return !(fc && String(fc).indexOf('pk')===0); } },
+  { id:'one',       src:'plugins/one.js',       labelKey:'gameOne', icon:'\uD83C\uDCCF', challengeMsgKey:'oneChallengeMsg', match:function(fc){ return !!fc && String(fc).indexOf('one')===0; } },
   { id:'rigori',    src:'plugins/rigori.js',    labelKey:'gamePk',  icon:'\u26BD', challengeMsgKey:'pkChallengeMsg',  match:function(fc){ return !!fc && String(fc).indexOf('pk')===0; } },
+  { id:'jankenpon', src:'plugins/jankenpon.js', labelKey:'gameJkp', icon:'\u270A', challengeMsgKey:'gameChallengeMsg', match:function(fc){ return !(fc && (String(fc).indexOf('pk')===0 || String(fc).indexOf('one')===0)); } },
 ];
 const _gamePluginProm = {};
 function loadGamePlugin(id){
