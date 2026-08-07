@@ -32,6 +32,7 @@ var L = {
    plus2:'+2 to %s', plus4:'+4 to %s', skip:'Skip!', reverse:'Reverse!', caught:'%s caught! +2',
    chalWin:'Challenge won! %s draws 4', chalLose:'Challenge failed! %s draws 6',
    rematch:'REMATCH', exit:'EXIT', you:'You', scarti:'DISCARD', pesca:'DRAW',
+   rematchAsk:'%s wants a rematch', rematchWait:'Waiting for the other player to accept…', accept:'ACCEPT', decline:'DECLINE', rematchNo:'%s declined the rematch',
    colRed:'Red',colGreen:'Green',colBlue:'Blue',colYellow:'Yellow' },
  it:{ chooseMode:'Scegli una modalità', m1v1:'1 vs 1', m2v2:'2 vs 2 (tu + compagno vs 2 bot)',
    sent:'Sfida inviata', waitAccept:'In attesa che l’avversario accetti…', waitOpp:'In attesa dell’avversario…',
@@ -43,6 +44,7 @@ var L = {
    plus2:'+2 a %s', plus4:'+4 a %s', skip:'Salta!', reverse:'Inverti!', caught:'%s beccato! +2',
    chalWin:'Sfida riuscita! %s pesca 4', chalLose:'Sfida fallita! %s pesca 6',
    rematch:'RIVINCITA', exit:'ESCI', you:'Tu', scarti:'SCARTI', pesca:'PESCA',
+   rematchAsk:'%s vuole la rivincita', rematchWait:'In attesa che l’altro giocatore accetti…', accept:'ACCETTA', decline:'RIFIUTA', rematchNo:'%s ha rifiutato la rivincita',
    colRed:'Rosso',colGreen:'Verde',colBlue:'Blu',colYellow:'Giallo' },
  es:{ chooseMode:'Elige un modo', m1v1:'1 vs 1', m2v2:'2 vs 2 (tú + compañero vs 2 bots)',
    sent:'Desafío enviado', waitAccept:'Esperando que el rival acepte…', waitOpp:'Esperando al rival…',
@@ -54,6 +56,7 @@ var L = {
    plus2:'+2 a %s', plus4:'+4 a %s', skip:'¡Salta!', reverse:'¡Invertir!', caught:'¡%s pillado! +2',
    chalWin:'¡Desafío ganado! %s roba 4', chalLose:'¡Desafío fallido! %s roba 6',
    rematch:'REVANCHA', exit:'SALIR', you:'Tú', scarti:'DESCARTE', pesca:'ROBAR',
+   rematchAsk:'%s quiere la revancha', rematchWait:'Esperando que el otro jugador acepte…', accept:'ACEPTAR', decline:'RECHAZAR', rematchNo:'%s rechazó la revancha',
    colRed:'Rojo',colGreen:'Verde',colBlue:'Azul',colYellow:'Amarillo' }
 };
 function lang(){ try{ if(typeof curLang==='function'){ var c=curLang(); if(L[c])return c; } }catch(e){} try{ var n=(navigator.language||'en').slice(0,2); if(L[n])return n; }catch(e){} return 'en'; }
@@ -66,7 +69,7 @@ function colName(c){ return T2({R:'colRed',G:'colGreen',B:'colBlue',Y:'colYellow
 if(!document.getElementById('one-font-link')){ var fl=document.createElement('link'); fl.id='one-font-link'; fl.rel='stylesheet'; fl.href='https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'; document.head.appendChild(fl); }
 if(!document.getElementById('one-plugin-css')){
   var stEl=document.createElement('style'); stEl.id='one-plugin-css';
-  stEl.textContent = ".one-root canvas{ image-rendering:pixelated; image-rendering:crisp-edges; }\n.one-root, .one-root #menu{ position:absolute; inset:0; }\n.one-root{ background:#0a3;  background-size:cover; background-position:center; image-rendering:pixelated; }\n.one-root button{ border:none; border-radius:6px; padding:12px 14px; font-size:11px; cursor:pointer; color:#fff; background:#2b6cff;\n    box-shadow:0 5px 0 #17408f; font-family:inherit; margin:6px 4px 0 0; transition:transform .05s; letter-spacing:1px; }\n.one-root button:active{ transform:translateY(3px); box-shadow:0 2px 0 #17408f; }\n.one-root button.green{ background:#3fbf3f; box-shadow:0 5px 0 #1f7a1f; }\n.one-root button.grey{ background:#54687a; box-shadow:0 5px 0 #33424f; }\n.one-root button.warn{ background:#ffb020; color:#5a3d00; box-shadow:0 5px 0 #b57200; }\n.one-root button:disabled{ opacity:.45; box-shadow:none; cursor:default; }\n.one-root .hidden{ display:none !important; }\n.one-root .pod{ position:absolute; z-index:6; display:flex; flex-direction:column; align-items:center; gap:5px; }\n.one-root .pod .av{ width:60px; height:60px; }\n.one-root .pod .nm{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.35); border-radius:5px; padding:4px 8px; font-size:9px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .pod.turn .av{ filter:drop-shadow(0 0 0 #ffe14d); animation:podpulse .9s steps(2) infinite; }\n\n  @keyframes podpulse{ 0%,100%{ filter:drop-shadow(0 0 4px #ffe14d);} 50%{ filter:drop-shadow(0 0 10px #ffe14d);} }\n.one-root .seat-top{ top:5%; left:50%; transform:translateX(-50%); }\n.one-root .seat-left{ top:32%; left:12px; }\n.one-root .seat-right{ top:32%; right:12px; }\n.one-root .seat-me{ bottom:calc(25vh + 6px); left:12px; }\n.one-root .fan{ position:absolute; z-index:5; height:70px; }\n.one-root .fan .card{ position:absolute; top:0; }\n.one-root .fan-top{ top:calc(5% + 70px); left:50%; transform:translateX(-50%); }\n.one-root .fan-left{ top:calc(32% + 66px); left:12px; }\n.one-root .fan-right{ top:calc(32% + 66px); right:12px; }\n.one-root .gtop{ position:absolute; top:0; left:0; right:0; z-index:8; display:flex; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0; }\n.one-root .chip{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.3); border-radius:6px; padding:6px 10px; font-size:9px; display:flex; align-items:center; gap:6px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gx{ margin-left:auto; background:#e5484d; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:16px; cursor:pointer; box-shadow:0 4px 0 #a12; }\n.one-root .center{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); z-index:5; display:flex; align-items:center; gap:26px; }\n.one-root .plabel{ font-size:9px; opacity:.9; text-align:center; margin-top:8px; text-shadow:0 2px 3px rgba(0,0,0,.6); }\n.one-root .colorchip{ position:absolute; left:50%; top:calc(46% + 86px); transform:translateX(-50%); z-index:6; font-size:9px; padding:6px 12px; border-radius:6px; border:2px solid rgba(255,255,255,.5); box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gstatus{ position:absolute; left:0; right:0; top:calc(46% - 132px); z-index:6; text-align:center; font-size:11px; line-height:1.6; text-shadow:0 3px 0 rgba(0,0,0,.6); padding:0 12px; }\n.one-root .dirbadge{ position:absolute; left:50%; top:calc(46% - 104px); transform:translateX(-50%); z-index:6; font-size:20px; text-shadow:0 2px 0 rgba(0,0,0,.5); }\n.one-root .handwrap{ position:absolute; left:0; right:0; bottom:0; z-index:7; padding:6px 6px calc(env(safe-area-inset-bottom,0px) + 8px); }\n.one-root .gbtns{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; flex-wrap:wrap; }\n.one-root .hand{ display:flex; justify-content:center; align-items:flex-end; min-height:104px; }\n.one-root .hand .slot{ margin-left:-20px; transition:transform .08s; }\n.one-root .hand .slot:first-child{ margin-left:0; }\n.one-root .hand .slot.playable:hover, .one-root .hand .slot.playable:active{ transform:translateY(-16px); z-index:20; }\n.one-root .card{ display:block; image-rendering:auto; filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root img.card{ image-rendering:auto; }\n.one-root .card.disabled{ filter:brightness(.62) saturate(.7) drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root .colors{ display:flex; gap:12px; justify-content:center; margin-top:10px; }\n.one-root .colors button{ width:52px; height:52px; border-radius:6px; border:3px solid #fff; box-shadow:0 4px 0 rgba(0,0,0,.35); }\n.one-root .modalbg{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; z-index:40; }\n.one-root .modal{ background:#0a1a30; border:3px solid #2b6cff; border-radius:8px; padding:18px; width:min(92%,340px); text-align:center; box-shadow:0 10px 0 rgba(0,0,0,.5); font-size:11px; line-height:1.7; }\n.one-root .flash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:50; }\n.one-root .flash span{ font-size:11vw; color:#ffe14d; text-shadow:0 5px 0 #b5311e, 0 0 24px rgba(255,225,77,.7); opacity:0; animation:fp .6s steps(4) forwards; }\n\n  @keyframes fp{ 0%{opacity:0;transform:scale(.4)} 55%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }\n.one-root .toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; border:2px solid #444; color:#fff; padding:10px 14px; border-radius:6px; font-size:10px; z-index:60; opacity:0; transition:opacity .2s; }\n.one-root .toast.show{ opacity:1; }"
+  stEl.textContent = ".one-root canvas{ image-rendering:pixelated; image-rendering:crisp-edges; }\n.one-root, .one-root #menu{ position:absolute; inset:0; }\n.one-root{ background:#0a3;  background-size:cover; background-position:center; image-rendering:pixelated; }\n.one-root button{ border:none; border-radius:6px; padding:12px 14px; font-size:11px; cursor:pointer; color:#fff; background:#2b6cff;\n    box-shadow:0 5px 0 #17408f; font-family:inherit; margin:6px 4px 0 0; transition:transform .05s; letter-spacing:1px; }\n.one-root button:active{ transform:translateY(3px); box-shadow:0 2px 0 #17408f; }\n.one-root button.green{ background:#3fbf3f; box-shadow:0 5px 0 #1f7a1f; }\n.one-root button.grey{ background:#54687a; box-shadow:0 5px 0 #33424f; }\n.one-root button.warn{ background:#ffb020; color:#5a3d00; box-shadow:0 5px 0 #b57200; }\n.one-root button:disabled{ opacity:.45; box-shadow:none; cursor:default; }\n.one-root .hidden{ display:none !important; }\n.one-root .pod{ position:absolute; z-index:6; display:flex; flex-direction:column; align-items:center; gap:5px; }\n.one-root .pod .av{ width:60px; height:60px; }\n.one-root .pod .nm{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.35); border-radius:5px; padding:4px 8px; font-size:9px; white-space:nowrap; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .pod.turn .av{ filter:drop-shadow(0 0 0 #ffe14d); animation:podpulse .9s steps(2) infinite; }\n\n  @keyframes podpulse{ 0%,100%{ filter:drop-shadow(0 0 4px #ffe14d);} 50%{ filter:drop-shadow(0 0 10px #ffe14d);} }\n.one-root .seat-top{ top:5%; left:50%; transform:translateX(-50%); }\n.one-root .seat-left{ top:32%; left:12px; }\n.one-root .seat-right{ top:32%; right:12px; }\n.one-root .seat-me{ bottom:calc(25vh + 6px); left:12px; }\n.one-root .fan{ position:absolute; z-index:5; height:70px; }\n.one-root .fan .card{ position:absolute; top:0; }\n.one-root .fan-top{ top:calc(5% + 70px); left:50%; transform:translateX(-50%); }\n.one-root .fan-left{ top:calc(32% + 66px); left:12px; }\n.one-root .fan-right{ top:calc(32% + 66px); right:12px; }\n.one-root .gtop{ position:absolute; top:0; left:0; right:0; z-index:8; display:flex; align-items:center; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0; }\n.one-root .chip{ background:rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.3); border-radius:6px; padding:6px 10px; font-size:9px; display:flex; align-items:center; gap:6px; box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gx{ margin-left:auto; background:#e5484d; border:none; color:#fff; width:38px; height:38px; border-radius:6px; font-size:16px; cursor:pointer; box-shadow:0 4px 0 #a12; }\n.one-root .center{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); z-index:5; display:flex; align-items:center; gap:26px; }\n.one-root .plabel{ font-size:9px; opacity:.9; text-align:center; margin-top:8px; text-shadow:0 2px 3px rgba(0,0,0,.6); }\n.one-root .colorchip{ position:absolute; left:50%; top:calc(46% + 86px); transform:translateX(-50%); z-index:6; font-size:9px; padding:6px 12px; border-radius:6px; border:2px solid rgba(255,255,255,.5); box-shadow:0 3px 0 rgba(0,0,0,.4); }\n.one-root .gstatus{ position:absolute; left:0; right:0; top:calc(46% - 132px); z-index:6; text-align:center; font-size:11px; line-height:1.6; text-shadow:0 3px 0 rgba(0,0,0,.6); padding:0 12px; }\n.one-root .dirbadge{ position:absolute; left:50%; top:calc(46% - 104px); transform:translateX(-50%); z-index:6; font-size:20px; text-shadow:0 2px 0 rgba(0,0,0,.5); }\n.one-root .handwrap{ position:absolute; left:0; right:0; bottom:0; z-index:7; padding:6px 6px calc(env(safe-area-inset-bottom,0px) + 8px); }\n.one-root .gbtns{ display:flex; gap:8px; justify-content:center; margin-bottom:8px; flex-wrap:wrap; }\n.one-root .hand{ display:flex; justify-content:center; align-items:flex-end; min-height:104px; }\n.one-root .hand .slot{ margin-left:-20px; transition:transform .08s; }\n.one-root .hand .slot:first-child{ margin-left:0; }\n.one-root .hand .slot.playable:hover, .one-root .hand .slot.playable:active{ transform:translateY(-16px); z-index:20; }\n.one-root .card{ display:block; image-rendering:auto; filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root img.card{ image-rendering:auto; }\n.one-root .card.disabled{ filter:brightness(.62) saturate(.7) drop-shadow(0 4px 4px rgba(0,0,0,.4)); }\n.one-root .colors{ display:flex; gap:12px; justify-content:center; margin-top:10px; }\n.one-root .colors button{ width:52px; height:52px; border-radius:6px; border:3px solid #fff; box-shadow:0 4px 0 rgba(0,0,0,.35); }\n.one-root .modalbg{ position:fixed; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; z-index:40; }\n.one-root .modal{ background:#0a1a30; border:3px solid #2b6cff; border-radius:8px; padding:18px; width:min(92%,340px); text-align:center; box-shadow:0 10px 0 rgba(0,0,0,.5); font-size:11px; line-height:1.7; }\n.one-root .flash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:50; }\n.one-root .flash span{ font-size:11vw; color:#ffe14d; text-shadow:0 5px 0 #b5311e, 0 0 24px rgba(255,225,77,.7); opacity:0; animation:fp .6s steps(4) forwards; }\n\n  @keyframes fp{ 0%{opacity:0;transform:scale(.4)} 55%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }\n.one-root .toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:#111; border:2px solid #444; color:#fff; padding:10px 14px; border-radius:6px; font-size:10px; z-index:60; opacity:0; transition:opacity .2s; }\n.one-root .toast.show{ opacity:1; }\n@media (max-width:760px){ .one-root .hand{ justify-content:flex-start; overflow-x:auto; overflow-y:visible; -webkit-overflow-scrolling:touch; padding:6px 10px; scrollbar-width:none; } .one-root .hand::-webkit-scrollbar{ display:none; } .one-root .hand .slot{ margin-left:-12px; } .one-root .hand .slot:first-child{ margin-left:0; } }"
     + '\n.one-root{position:fixed;inset:0;z-index:65;overflow:hidden;color:#fff;}'
     // Force the pixel font on the whole overlay with !important so Winky's own
     // styles can never override it (this was why the plugin text looked generic).
@@ -74,7 +77,7 @@ if(!document.getElementById('one-plugin-css')){
     // Cards MUST scale smoothly (auto). If they fall back to pixelated (nearest-
     // neighbor) the white border stays hard/full and looks TOO THICK. Force auto
     // with !important so no Winky/global canvas rule can make them blocky.
-    + '\n.one-root canvas.card, .one-root .card, .one-root img.card{ image-rendering:auto !important; image-rendering:-webkit-optimize-contrast !important; }'
+    + '\n.one-root canvas.card, .one-root .card, .one-root img.card{ image-rendering:auto !important; }'
     + (SPR.bg?('\n.one-root{background-image:url('+SPR.bg+');background-size:cover;background-position:center;image-rendering:pixelated;}'):'');
   document.head.appendChild(stEl);
 }
@@ -191,10 +194,10 @@ function smallCorner(ctx,str,x,y,color){ // fs=1 mini
 function cardShort(c){ var k=cardKind(c); if(k==='num')return c.slice(1); if(k==='skip')return '\u2298'; if(k==='reverse')return '\u21C4'; if(k==='drawtwo')return '+2'; if(k==='wild')return 'W'; return '+4'; }
 
 /* Public: cardEl(code, sizeClass) -> canvas element sized for display */
-var SIZES={ '': [66,98], 'sm':[46,68], 'big':[80,118] };
+var SIZES={ '': [66,98], 'sm':[46,68], 'md':[52,78], 'big':[80,118] };
 function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; 
   var cv=makeCardCanvas(code); cv.style.width=sz[0]+'px'; cv.style.height=sz[1]+'px'; cv.className='card '+(cls||'');
-  cv.style.imageRendering='auto'; cv.style.setProperty('image-rendering','-webkit-optimize-contrast');
+  cv.style.imageRendering='auto';  // smooth downscale exactly like single player (no optimize-contrast: it made borders look thick on desktop)
   return cv; }
 var _avCache={};
 function makeAvatar(kind){
@@ -231,11 +234,15 @@ function renderFan(seat,n){ var wrap=$('fan_'+seat); if(!wrap)return; wrap.inner
   for(var i=0;i<maxShown;i++){ var c=cardEl('back','sm'); c.style.left=(i*spread)+'px'; var ang=(i-(maxShown-1)/2)*3; c.style.transform='rotate('+ang+'deg)'; wrap.appendChild(c); } }
 
 
-/* teammate face-up fan (2v2): same look as renderFan but shows real cards */
+/* teammate face-up fan (2v2): show the partner's REAL cards clearly. Flat (no
+   rotation) and well spaced so the numbers/symbols are readable; centered. */
 function renderFanFace(seat, cards){ var wrap=$('fan_'+seat); if(!wrap)return; wrap.innerHTML='';
-  var n=cards.length, maxShown=Math.min(n,8), spread=Math.min(22,150/Math.max(1,maxShown)), cardW=46;
+  var n=cards.length, maxShown=Math.min(n,12);
+  var cardW=52; // 'md' size below
+  // Fit within ~320px: pick a spacing that keeps cards mostly visible.
+  var spread=Math.max(20, Math.min(cardW-6, Math.floor((300-cardW)/Math.max(1,maxShown-1))));
   wrap.style.width=((maxShown-1)*spread+cardW)+'px';
-  for(var i=0;i<maxShown;i++){ var c=cardEl(cards[i],'sm'); c.style.left=(i*spread)+'px'; var ang=(i-(maxShown-1)/2)*3; c.style.transform='rotate('+ang+'deg)'; wrap.appendChild(c); } }
+  for(var i=0;i<maxShown;i++){ var c=cardEl(cards[i],'md'); c.style.left=(i*spread)+'px'; c.style.zIndex=String(i); wrap.appendChild(c); } }
 function showSeat(seat,on){ var pod=$('pod_'+seat),fan=$('fan_'+seat); if(pod)pod.style.display=on?'':'none'; if(fan)fan.style.display=on?'':'none'; }
 function setHumanAvatar(id, info){ var host=$(id); if(!host)return; var key='H:'+(info&&info.nick||''); if(host.dataset.kind===key)return; host.dataset.kind=key; host.innerHTML='';
   var node = avatarEl(info.nick, info.id, info.url);
@@ -310,7 +317,7 @@ views.oneGame=function(p){
   // localize pile labels (SCARTI/PESCA)
   try{ var labs=root.querySelectorAll('.plabel'); if(labs[0])labs[0].textContent=T2('scarti'); if(labs[1])labs[1].textContent=T2('pesca'); }catch(e){}
 
-  var st=null, lastSeq=-1, botTimer=null, actedSeq=-1, endBg=null, otherAv={nick:p.otherNick};
+  var st=null, lastSeq=-1, botTimer=null, actedSeq=-1, endBg=null, rematchBg=null, otherAv={nick:p.otherNick};
   function flash(t){ var f=el2('div','flash'); var s=el2('span',null,t); f.appendChild(s); root.appendChild(f); setTimeout(function(){ try{f.remove();}catch(e){} },650); }
   try{ if(p.otherId){ rest('/users?id=eq.'+p.otherId+'&select=nickname,avatar_id,avatar_url').then(function(r){ if(r&&r[0]){ otherAv={nick:r[0].nickname,id:r[0].avatar_id,url:r[0].avatar_url}; paint(); } }).catch(function(){}); } }catch(e){}
 
@@ -379,7 +386,21 @@ views.oneGame=function(p){
     if(host && r.status==='active' && !r.state){ var A={id:r.from_id,nick:r.from_nick}, B={id:r.to_id,nick:r.to_nick}; var seeded=seed(p.mode||r.from_char, A, B); try{ rest('/game_challenges?id=eq.'+p.id,{method:'PATCH',body:{state:seeded,updated_at:new Date().toISOString()}}); }catch(e){} st=seeded; G.state=st; lastSeq=st.seq; paint(); return; }
     if(r.status!=='active'){ $('gStatus').textContent=T2('waitAccept'); return; }
     if(!r.state){ $('gStatus').textContent=T2('waitOpp'); return; }
-    if(r.state.seq!==lastSeq){ st=r.state; G.state=st; lastSeq=st.seq; paint(); if(st.winner){ endGame(); return; } }
+    if(r.state.seq!==lastSeq){ st=r.state; G.state=st; lastSeq=st.seq;
+      // ---- Rematch negotiation takes priority over the end screen ----
+      if(st.rematch){
+        if(st.rematch.by && st.rematch.accepted && st.rematch.by!==st.rematch.accepted){
+          // Both humans agreed. Host reseeds a fresh game; the other waits.
+          if(host){ doReseed(); return; } else { showWaitingRematch(); return; }
+        }
+        if(st.rematch.by===meId){ showWaitingRematch(); return; }
+        showConfirmRematch(st.rematch.by); return;
+      } else {
+        // No rematch pending: clear any rematch modal.
+        closeRematch();
+      }
+      paint(); if(st.winner){ endGame(); return; }
+    }
     else if(st){
       // WATCHDOG: even without a seq change, if it's MY turn (or a +4 decision is
       // aimed at me), re-run paint so my controls are guaranteed live. This
@@ -393,14 +414,35 @@ views.oneGame=function(p){
   }
   function tick(){ try{ rest('/game_challenges?id=eq.'+p.id+'&select=*').then(function(rows){ applyRow(rows&&rows[0]); }).catch(function(){}); }catch(e){} }
 
-  function endGame(){ if(endBg)return; setStatus(); App.stopPoll(); var iWon = st.mode==='one2' ? (st.team[st.winner]===st.team[meSlot()]) : (st.winner===meSlot());
+  function endGame(){ if(endBg||rematchBg)return; setStatus(); var iWon = st.mode==='one2' ? (st.team[st.winner]===st.team[meSlot()]) : (st.winner===meSlot());
     var msg = st.mode==='one2' ? (iWon?T2('teamWin'):T2('teamLose')) : (iWon?T2('youWin'):T2('youLose'));
     endBg=el2('div','modalbg'); var box=el2('div','modal'); var t=el2('div',null,msg); t.style.fontSize='16px'; t.style.color='#ffe14d'; box.appendChild(t);
     var row=el2('div','row'); row.style.justifyContent='center'; row.style.marginTop='12px';
-    var rb=el2('button','green',T2('rematch')); rb.onclick=function(){ rematch(); }; var ex=el2('button','grey',T2('exit')); ex.onclick=function(){ leave(); };
+    // BOTH winner and loser can REQUEST a rematch; the other must confirm.
+    var rb=el2('button','green',T2('rematch')); rb.onclick=function(){ requestRematch(); };
+    var ex=el2('button','grey',T2('exit')); ex.onclick=function(){ leave(); };
     row.appendChild(rb); row.appendChild(ex); box.appendChild(row); endBg.appendChild(box); root.appendChild(endBg);
   }
-  function rematch(){ if(endBg){ endBg.remove(); endBg=null; } if(host){ var A={id:st.userA,nick:st.names.A}, B={id:st.userB,nick:st.names.B}; st=seed(st.mode,A,B); G.state=st; lastSeq=st.seq; actedSeq=-1; pushState(); } App.stopPoll(); tick(); App.poll=setInterval(tick,1100); }
+  /* ---- Rematch negotiation (request -> confirm -> host reseeds) ---- */
+  function otherHumanId(){ return (meId===st.userA)? st.userB : st.userA; }
+  function nameOfId(id){ return (id===st.userA)? st.names.A : st.names.B; }
+  function closeEnd(){ if(endBg){ try{endBg.remove();}catch(e){} endBg=null; } }
+  function closeRematch(){ if(rematchBg){ try{rematchBg.remove();}catch(e){} rematchBg=null; } }
+  function showWaitingRematch(){ closeEnd(); closeRematch(); rematchBg=el2('div','modalbg'); var box=el2('div','modal');
+    box.appendChild(el2('div',null,T2('rematchWait')));
+    var ex=el2('button','grey',T2('exit')); ex.style.marginTop='12px'; ex.onclick=function(){ if(st){ st.rematch=null; try{pushState();}catch(e){} } leave(); };
+    box.appendChild(ex); rematchBg.appendChild(box); root.appendChild(rematchBg); }
+  function showConfirmRematch(byId){ closeEnd(); closeRematch(); rematchBg=el2('div','modalbg'); var box=el2('div','modal');
+    box.appendChild(el2('div',null,T2('rematchAsk', nameOfId(byId))));
+    var row=el2('div','row'); row.style.justifyContent='center'; row.style.marginTop='12px';
+    var yes=el2('button','green',T2('accept')); yes.onclick=function(){ acceptRematch(); };
+    var no=el2('button','grey',T2('decline')); no.onclick=function(){ declineRematch(); };
+    row.appendChild(yes); row.appendChild(no); box.appendChild(row); rematchBg.appendChild(box); root.appendChild(rematchBg); }
+  function requestRematch(){ if(!st)return; st.rematch={ by:meId }; closeEnd(); pushState(); showWaitingRematch(); }
+  function acceptRematch(){ if(!st||!st.rematch)return; st.rematch.accepted=meId; closeRematch();
+    if(host){ doReseed(); } else { pushState(); showWaitingRematch(); } }
+  function declineRematch(){ if(!st)return; st.rematch=null; closeRematch(); pushState(); leave(); }
+  function doReseed(){ var A={id:st.userA,nick:st.names.A}, B={id:st.userB,nick:st.names.B}; st=seed(st.mode,A,B); G.state=st; lastSeq=st.seq; actedSeq=-1; closeEnd(); closeRematch(); pushState(); }
   function leave(){ App.stopPoll(); if(botTimer){clearTimeout(botTimer);botTimer=null;} ACTIVE=null; G.state=null; try{ root.remove(); }catch(e){} App.back(); }
 
   App.stopPoll(); tick(); App.poll=setInterval(tick,1100);
