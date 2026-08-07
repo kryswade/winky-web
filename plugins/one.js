@@ -145,35 +145,34 @@ function smoothReverse(ctx,cx,cy,r,color){ ctx.save(); ctx.strokeStyle=color; ct
   ctx.restore(); }
 
 var _cardCache={};
-function makeCardCanvas(code, W, H){
-  W=W||200; H=H||300; var key=code+'|'+W+'|'+H;
-  if(_cardCache[key]){ return _cardCache[key]; }
-  var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
-  ctx.imageSmoothingEnabled=true; try{ ctx.imageSmoothingQuality='high'; }catch(e){} ctx.lineJoin='round'; ctx.lineCap='round';
-  var pad=Math.max(2, Math.round(W*0.045));   // THIN border (~4.5% of width)
-  var rad=Math.max(4, Math.round(W*0.14));
-  var irad=Math.max(3, rad-Math.round(pad*0.5));
-  roundRectPath(ctx,0.5,0.5,W-1,H-1,rad); ctx.fillStyle='#ffffff'; ctx.fill();
+function makeCardCanvas(code){
+  if(_cardCache[code]){ return copyCanvas(_cardCache[code]); }
+  var W=200,H=300; var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var ctx=cv.getContext('2d');
+  ctx.imageSmoothingEnabled=true; ctx.lineJoin='round'; ctx.lineCap='round';
+  var pad=12, rad=28;
+  // white rounded body
+  roundRectPath(ctx,2,2,W-4,H-4,rad); ctx.fillStyle='#ffffff'; ctx.fill();
   if(code==='back'){
-    roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.fillStyle='#e5484d'; ctx.fill();
-    if(BACK_READY){ ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip(); ctx.drawImage(BACKIMG,pad,pad,W-2*pad,H-2*pad); ctx.restore(); }
+    roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.fillStyle='#e5484d'; ctx.fill();
+    if(BACK_READY){ ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip(); ctx.drawImage(BACKIMG,pad,pad,W-2*pad,H-2*pad); ctx.restore(); }
     else { drawPlaque(ctx,W,H); smoothText(ctx,'ONE',W/2,H/2,Math.round(H*0.13),'#e5484d'); }
-    _cardCache[key]=cv; return cv;
+    _cardCache[code]=cv; return copyCanvas(cv);
   }
   var k=cardKind(code), col=cardColor(code);
   if(k==='wild'||k==='wild4'){
-    ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip();
+    ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip();
     var mx=W/2,my=H/2;
-    ctx.fillStyle=COLHEX.R; ctx.fillRect(pad,pad,mx-pad,my-pad); ctx.fillStyle=COLHEX.G; ctx.fillRect(mx,pad,W-pad-mx,my-pad);
-    ctx.fillStyle=COLHEX.B; ctx.fillRect(pad,my,mx-pad,H-pad-my); ctx.fillStyle=COLHEX.Y; ctx.fillRect(mx,my,W-pad-mx,H-pad-my);
+    ctx.fillStyle=COLHEX.R; ctx.fillRect(0,0,mx,my); ctx.fillStyle=COLHEX.G; ctx.fillRect(mx,0,W-mx,my);
+    ctx.fillStyle=COLHEX.B; ctx.fillRect(0,my,mx,H-my); ctx.fillStyle=COLHEX.Y; ctx.fillRect(mx,my,W-mx,H-my);
     ctx.restore();
     drawPlaque(ctx,W,H);
     smoothText(ctx, k==='wild'?'\u2605':'+4', W/2, H/2, Math.round(H*(k==='wild'?0.20:0.17)), '#222');
     drawCorners(ctx,W,H,cardShortForCorner(code),'#222');
-    _cardCache[key]=cv; return cv;
+    _cardCache[code]=cv; return copyCanvas(cv);
   }
-  roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.fillStyle=COLHEX[col]; ctx.fill();
-  ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,irad); ctx.clip(); ctx.fillStyle=COLDARK[col]; ctx.fillRect(pad,H-pad-Math.round(H*0.05),W-2*pad,Math.round(H*0.05)); ctx.restore();
+  // colored rounded inner + subtle bottom shade
+  roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.fillStyle=COLHEX[col]; ctx.fill();
+  ctx.save(); roundRectPath(ctx,pad,pad,W-2*pad,H-2*pad,rad-6); ctx.clip(); ctx.fillStyle=COLDARK[col]; ctx.fillRect(pad,H-pad-14,W-2*pad,14); ctx.restore();
   drawPlaque(ctx,W,H);
   var cx=W/2, cy=H/2;
   if(k==='num'){ smoothText(ctx, code.slice(1), cx, cy, Math.round(H*0.32), COLHEX[col]); }
@@ -181,7 +180,7 @@ function makeCardCanvas(code, W, H){
   else if(k==='reverse'){ smoothReverse(ctx,cx,cy,H*0.15,COLHEX[col]); }
   else if(k==='drawtwo'){ smoothText(ctx,'+2',cx,cy,Math.round(H*0.24),COLHEX[col]); }
   drawCornerMark(ctx,W,H,k,code,COLHEX[col]);
-  _cardCache[key]=cv; return cv;
+  _cardCache[code]=cv; return copyCanvas(cv);
 }
 function cardShortForCorner(code){ var k=cardKind(code); if(k==='num')return code.slice(1); if(k==='skip')return 'S'; if(k==='reverse')return 'R'; if(k==='drawtwo')return '+2'; if(k==='wild')return 'W'; return '+4'; }
 function smallCorner(ctx,str,x,y,color){ // fs=1 mini
@@ -197,16 +196,7 @@ function cardShort(c){ var k=cardKind(c); if(k==='num')return c.slice(1); if(k==
 /* Public: cardEl(code, sizeClass) -> canvas element sized for display */
 var SIZES={ '': [66,98], 'sm':[46,68], 'md':[52,78], 'big':[80,118] };
 function cardEl(code,cls){ var sz=SIZES[cls||'']||SIZES['']; 
-  var w=sz[0], h=sz[1];
-  var dpr=1; try{ dpr=Math.max(1,Math.min(3, window.devicePixelRatio||1)); }catch(e){}
-  // Draw the card ONCE at exactly the final device-pixel resolution. Nothing is
-  // scaled by the browser, so the thin border is identical on desktop & mobile.
-  var src=makeCardCanvas(code, Math.round(w*dpr), Math.round(h*dpr));
-  // return a fresh element (cache holds the master; clone via drawImage 1:1)
-  var out=document.createElement('canvas'); out.width=src.width; out.height=src.height;
-  out.style.width=w+'px'; out.style.height=h+'px'; out.className='card '+(cls||''); out.style.imageRendering='auto';
-  var oc=out.getContext('2d'); oc.imageSmoothingEnabled=false; oc.drawImage(src,0,0);
-  return out; }
+  var cv=makeCardCanvas(code); cv.style.width=sz[0]+'px'; cv.style.height=sz[1]+'px'; cv.className='card '+(cls||''); return cv; }
 var _avCache={};
 function makeAvatar(kind){
   if(_avCache[kind]) return copyCanvas(_avCache[kind]);
