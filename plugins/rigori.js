@@ -217,9 +217,15 @@ views.pkGame=function(p){
     ball.style.transition='transform .5s cubic-bezier(.35,.55,.4,1)';
     ball.style.transform='translate(calc(-50% + '+tx+'px),'+ty+'px) scale(4.6) rotate(760deg)';
     if(saved){
-      setTimeout(()=>{ const s=(dir==='L'?-1:dir==='R'?1:0); const rx=tx - s*geom.sw*0.12; const ry=ty - geom.sh*0.30;
-        ball.style.transition='transform .45s cubic-bezier(.3,.2,.2,1)';
-        ball.style.transform='translate(calc(-50% + '+rx+'px),'+ry+'px) scale(2.8) rotate(-320deg)'; },380);
+      // SAVE: the ball bounces BACK off the keeper into the pitch (away from the
+      // camera), so it must SHRINK and travel toward the spot/field — not stay big
+      // in the foreground. Deflect slightly to the save side, ending small & far.
+      setTimeout(()=>{ const s=(dir==='L'?-1:dir==='R'?1:0);
+        // Target near the penalty spot, nudged toward the save side.
+        var backX=(geom.spotX + s*geom.sw*0.10) - bx;
+        var backY=(geom.spotY - geom.sh*0.04) - by;
+        ball.style.transition='transform .5s cubic-bezier(.25,.6,.3,1)';
+        ball.style.transform='translate(calc(-50% + '+backX+'px),'+backY+'px) scale(0.9) rotate(-420deg)'; },360);
     }
   }
   function diveKeeper(dir){ if(POV==='keeper') return diveKeeperKeeper(dir); return diveKeeperAttacker(dir); }
