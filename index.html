@@ -2454,5 +2454,129 @@ boot();
 })();
 </script>
 
+
+<!-- KINKY-EGG START -->
+<!-- Easter egg "Kinky Community": si attiva SOLO per chi digita @kinky + Invio. Client-side, solo sessione. -->
+<script id="kinky-egg">
+/* ===== KINKY COMMUNITY — easter egg (client-side, session-only) =====
+   Scrivi @kinky in una chat e premi INVIO: l'app diventa "Kinky Community"
+   (nome + tema + sfondo + menu). Riscrivi @kinky + INVIO per disattivare.
+   Solo per chi carica questo script, solo per la sessione. Il token NON
+   viene inviato in chat. */
+(function () {
+  'use strict';
+  var TOKEN='@kinky', KEY='kinky_egg_on', FROM='Winky Community', TO='Kinky Community';
+  var ON=false; try{ ON=sessionStorage.getItem(KEY)==='1'; }catch(e){}
+
+  /* ---- theme CSS: override delle variabili + sfondo + flair ---- */
+  function css(){ return [
+    ":root.kinky{",
+      "--bg:#12000a;--panel:#220412;--panel2:#2e0819;",
+      "--accent:#ff1e88;--text:#ffe3f0;--muted:#ef98c2;",
+      "--bubbleMine:#7a0b3a;--bubbleTheirs:#2a0716;--border:#4a1030;--listItem:#1b0410;",
+      "--btnPrimary:#c2185b;--btnGrey:#3a1230;--btnDark:#1a0410;--btnGreen:#8a1250;",
+      "--btnDanger:#4d0f2a;--btnDangerTxt:#ffb3d4;--btnWarn:#8a2a5a;--btnTxt:#fff;",
+      "--inputBg:#260a1a;--inputBorder:#5a1740;",
+    "}",
+    /* sfondo bordeaux/nero + pattern 💋⛓ */
+    ":root.kinky, :root.kinky body{background:#12000a !important;}",
+    ":root.kinky body{background-image:",
+      "radial-gradient(1200px 800px at 15% -10%, #3a0620 0%, #17010c 55%, #0a0006 100%),",
+      "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><text x='16' y='40' font-size='26' opacity='0.06'>%F0%9F%92%8B</text><text x='70' y='90' font-size='24' opacity='0.06'>%E2%9B%93</text><text x='30' y='104' font-size='22' opacity='0.05'>%F0%9F%94%A5</text></svg>\")",
+      " !important;background-attachment:fixed,fixed !important;background-repeat:no-repeat,repeat !important;}",
+    /* accenti caldi su pulsanti + titolo con glow */
+    ":root.kinky button.btn{background:linear-gradient(180deg,#ff2d8f,#a2124f) !important;color:#fff !important;box-shadow:0 3px 0 rgba(0,0,0,.4),0 0 16px rgba(255,45,143,.35) !important;}",
+    ":root.kinky button.btn.grey,:root.kinky button.btn.dark{background:#3a1230 !important;color:#ffd7ea !important;box-shadow:none !important;}",
+    ":root.kinky .title,:root.kinky #hTitle{color:#ff4fa3 !important;text-shadow:0 0 10px rgba(255,45,143,.55);}",
+    ":root.kinky .bubble.mine{box-shadow:0 0 14px rgba(255,45,143,.25) !important;}",
+    ":root.kinky ::selection{background:#ff2d8f;color:#12000a;}",
+    ":root.kinky ::-webkit-scrollbar-thumb{background:#ff2d8f !important;}",
+    /* accent tint su navrail attiva/bottom nav */
+    ":root.kinky #navRail .nr-btn.active{background:#ff2d8f !important;color:#1a0410 !important;}",
+    ":root.kinky .bottomnav .navtab.active{color:#ff4fa3 !important;}",
+    /* emoji fluttuanti */
+    "#kinky-fx{position:fixed;inset:0;pointer-events:none;z-index:2147483000;overflow:hidden}",
+    "#kinky-fx span{position:absolute;bottom:-42px;will-change:transform,opacity;animation:kinkyRise linear forwards;filter:drop-shadow(0 0 6px rgba(255,45,143,.5))}",
+    "@keyframes kinkyRise{to{transform:translateY(-112vh) rotate(360deg);opacity:0}}",
+    /* banner titolo */
+    "#kinky-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:2147483600;",
+      "background:linear-gradient(90deg,#ff2d8f,#a2124f);color:#fff;font:700 14px system-ui,Arial;",
+      "padding:10px 16px;border-radius:999px;box-shadow:0 8px 26px rgba(255,45,143,.55);letter-spacing:.3px}"
+  ].join(''); }
+
+  function styleEl(){ var s=document.getElementById('kinky-style'); if(!s){ s=document.createElement('style'); s.id='kinky-style'; document.head.appendChild(s);} return s; }
+
+  function toast(msg){ var t=document.createElement('div'); t.id='kinky-toast'; t.textContent=msg; document.body.appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){ t.remove(); },420); }, 1800); }
+
+  /* ---- rename brand (title + testi visibili) ---- */
+  var origTitle=null;
+  function swapTextNodes(root, a, b){
+    try{
+      var w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, list=[];
+      while((n=w.nextNode())){ if(n.nodeValue && n.nodeValue.indexOf(a)>=0) list.push(n); }
+      var re=new RegExp(a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g');
+      list.forEach(function(node){ node.nodeValue=node.nodeValue.replace(re,b); });
+    }catch(e){}
+  }
+  function renameOn(){
+    if(origTitle==null) origTitle=document.title;
+    document.title = document.title.indexOf(FROM)>=0 ? document.title.split(FROM).join(TO) : TO;
+    swapTextNodes(document.body, FROM, TO);
+  }
+  function renameOff(){
+    if(origTitle!=null){ document.title=origTitle; }
+    swapTextNodes(document.body, TO, FROM);
+  }
+
+  /* ---- emoji fx ---- */
+  var fxTimer=null;
+  var EMO=['\uD83D\uDE08','\uD83D\uDD25','\uD83D\uDC8B','\u26D3\uFE0F','\uD83E\uDD75','\uD83D\uDC84','\uD83D\uDC60','\uD83C\uDF36\uFE0F','\uD83D\uDDA4','\uD83D\uDC9C'];
+  function fxStart(){ var layer=document.getElementById('kinky-fx'); if(!layer){ layer=document.createElement('div'); layer.id='kinky-fx'; document.body.appendChild(layer);} if(fxTimer) return;
+    fxTimer=setInterval(function(){ var s=document.createElement('span'); s.textContent=EMO[Math.floor(Math.random()*EMO.length)]; s.style.left=(Math.random()*100)+'vw'; var d=(5+Math.random()*5).toFixed(1); s.style.animationDuration=d+'s'; s.style.fontSize=(16+Math.random()*22)+'px'; layer.appendChild(s); setTimeout(function(){ s.remove(); }, d*1000+250); }, 620); }
+  function fxStop(){ if(fxTimer){ clearInterval(fxTimer); fxTimer=null; } var l=document.getElementById('kinky-fx'); if(l) l.remove(); }
+
+  /* ---- keep applied on dynamic re-renders (App.setHeader / views) ---- */
+  var mo=new MutationObserver(function(){ if(ON) renameOn(); });
+  try{ mo.observe(document.documentElement,{childList:true,subtree:true}); }catch(e){}
+
+  function setState(on){
+    ON=on; try{ sessionStorage.setItem(KEY, on?'1':'0'); }catch(e){}
+    if(on){ styleEl().textContent=css(); document.documentElement.classList.add('kinky'); renameOn(); fxStart(); toast('\uD83D\uDE08 '+TO+' attivata \u2014 Dove i Winky diventano cattivi \uD83D\uDD25'); }
+    else { document.documentElement.classList.remove('kinky'); styleEl().textContent=''; renameOff(); fxStop(); toast('\uD83D\uDE07 Ok ok\u2026 '+FROM+' ripristinata'); }
+  }
+  function toggle(){ setState(!ON); }
+
+  /* ---- trigger: SOLO su INVIO in un composer ---- */
+  function isComposer(el){ if(!el) return false;
+    if(el.matches && el.matches('input[type="text"],textarea,[contenteditable="true"],[contenteditable=""]')){
+      // dentro un composer noto (wa/plain) o comunque un input testuale dell'app
+      return !!(el.closest && (el.closest('.wacomposer')||el.closest('.wapill')||el.closest('.composer')||el.closest('#app')));
+    }
+    return false; }
+  function valOf(el){ return ('value' in el && el.value!=null) ? String(el.value) : (el.textContent||''); }
+  function clearToken(el){ if('value' in el && el.value!=null){ el.value=el.value.split(TOKEN).join('').trim(); } else { el.textContent=(el.textContent||'').split(TOKEN).join('').trim(); } try{ el.dispatchEvent(new Event('input',{bubbles:true})); }catch(e){} }
+
+  document.addEventListener('keydown', function(ev){
+    if(ev.key!=='Enter' || ev.shiftKey) return;
+    var el=ev.target;
+    if(!isComposer(el)) return;
+    if(valOf(el).toLowerCase().indexOf(TOKEN)>=0){
+      // blocca l'invio del messaggio e nascondi il token
+      ev.preventDefault(); ev.stopImmediatePropagation();
+      clearToken(el);
+      toggle();
+    }
+  }, true); // capture: intercetta PRIMA dell'handler Invio del composer
+
+  /* ---- restore su reload nella stessa sessione ---- */
+  function boot(){ if(ON){ styleEl().textContent=css(); document.documentElement.classList.add('kinky'); renameOn(); fxStart(); } }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+
+  // API di test da console (facoltativa)
+  window.KinkyEgg={ toggle:toggle, on:function(){ setState(true); }, off:function(){ setState(false); }, isOn:function(){ return ON; } };
+})();
+</script>
+<!-- KINKY-EGG END -->
 </body>
 </html>
