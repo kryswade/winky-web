@@ -145,6 +145,9 @@
   .wc-voice .wc-wave .wc-bar{ flex:1; min-width:2px; max-width:3px; border-radius:2px; background:rgba(255,255,255,.35); }
   :root.light .wc-voice .wc-wave .wc-bar{ background:rgba(0,0,0,.25); }
   .wc-voice .wc-wave .wc-bar.played{ background:#25d366; }
+  .wc-voice .wc-wave .wc-fill{ position:absolute; inset:0; display:flex; align-items:center; gap:2px; pointer-events:none; clip-path:inset(0 100% 0 0); will-change:clip-path; }
+  .wc-voice .wc-wave .wc-fill .wc-bar{ background:#25d366 !important; flex:1; min-width:2px; max-width:3px; border-radius:2px; }
+  :root.light .wc-voice .wc-wave .wc-fill .wc-bar{ background:#25d366 !important; }
   .wc-voice .wc-time{ font-size:11px; opacity:.75; line-height:1; }
   .bubble .msgmenu{position:absolute;top:2px;right:6px;cursor:pointer;opacity:.5;font-size:14px;line-height:1;padding:2px}
   .bubble:hover .msgmenu{opacity:.9}
@@ -937,6 +940,10 @@ function parseMedia(t){if(!t||t.indexOf(MEDIA_PREFIX)!==0)return null;const p=t.
 function isStickerMsg(body){ const md=parseMedia(body); return !!(md && md.kind==='stk'); }
 /* WhatsApp-style voice message: small avatar + mic badge, play/pause, a seekable
    waveform and a time readout. opts:{mine, avatar:{nick,id,url}} are optional. */
+/* ===== SOSTITUISCI l'INTERA funzione wcVoiceBubble(...) con questa =====
+   Fix barra spettro vocali: riempimento VERDE fluido (60fps via
+   requestAnimationFrame) e continuo (clip-path), sempre visibile anche quando
+   la durata del file è Infinity/NaN (voice note MediaRecorder). */
 function wcVoiceBubble(mime, b64, opts){
   opts = opts || {};
   const wrap = document.createElement('div'); wrap.className='wc-voice';
@@ -947,17 +954,23 @@ function wcVoiceBubble(mime, b64, opts){
   const mic = document.createElement('div'); mic.className='wc-mic'; mic.textContent='\uD83C\uDFA4';
   avBox.appendChild(mic); wrap.appendChild(avBox);
   // Play/pause button
-  const btn = document.createElement('button'); btn.className='wc-play'; btn.type='button'; btn.textContent='\u25B6'; // ▶
+  const btn = document.createElement('button'); btn.className='wc-play'; btn.type='button'; btn.textContent='\u25B6';
   wrap.appendChild(btn);
   // Middle: waveform + time
   const mid = document.createElement('div'); mid.className='wc-mid';
   const wave = document.createElement('div'); wave.className='wc-wave';
-  const N = 30, bars = [];
+  const N = 30;
   // Deterministic pseudo-waveform seeded from the payload so it's stable per msg.
   let seed = (b64 ? b64.length : 7) * 2654435761 >>> 0;
   const rnd = () => { seed ^= seed<<13; seed>>>=0; seed ^= seed>>17; seed ^= seed<<5; seed>>>=0; return (seed%1000)/1000; };
-  for(let i=0;i<N;i++){ const bar=document.createElement('div'); bar.className='wc-bar';
-    const h=6+Math.round(rnd()*18); bar.style.height=h+'px'; wave.appendChild(bar); bars.push(bar); }
+  const heights = [];
+  for(let i=0;i<N;i++){ heights.push(6+Math.round(rnd()*18)); }
+  // base (grey) bars
+  for(let i=0;i<N;i++){ const bar=document.createElement('div'); bar.className='wc-bar'; bar.style.height=heights[i]+'px'; wave.appendChild(bar); }
+  // green fill overlay: identical bars, revealed left->right via clip-path (smooth)
+  const fill=document.createElement('div'); fill.className='wc-fill';
+  for(let i=0;i<N;i++){ const bar=document.createElement('div'); bar.className='wc-bar'; bar.style.height=heights[i]+'px'; fill.appendChild(bar); }
+  wave.appendChild(fill);
   mid.appendChild(wave);
   const time = document.createElement('div'); time.className='wc-time'; time.textContent='0:00';
   mid.appendChild(time); wrap.appendChild(mid);
@@ -965,35 +978,37 @@ function wcVoiceBubble(mime, b64, opts){
   const a = document.createElement('audio'); a.preload='metadata'; a.src='data:'+mime+';base64,'+b64;
   const fmt = (s)=>{ s=Math.max(0,Math.floor(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
   // MediaRecorder blobs / many data-URI MP3s report duration = Infinity/NaN until
-  // a seek forces the browser to compute it. Without a real duration the green
-  // progress can't advance. We resolve it with the known "seek to a huge time"
-  // trick, and keep a fallback estimate so the fill ALWAYS advances.
-  let dur = 0, durKnown = false, seekFixing = false, estMax = 0;
+  // a seek forces the browser to compute it. We resolve it with the "seek to a
+  // huge time" trick, and keep a fallback estimate so the fill ALWAYS advances.
+  let dur = 0, durKnown = false, seekFixing = false, estMax = 0, raf = 0;
   const setDur = (d)=>{ if(isFinite(d) && d>0){ dur=d; durKnown=true; time.textContent=fmt(d); } };
+  const curFrac = ()=>{
+    let frac;
+    if(durKnown && dur>0){ frac=a.currentTime/dur; }
+    else { estMax=Math.max(estMax, a.currentTime, 1); frac=a.currentTime/(estMax*1.15); }
+    return Math.max(0, Math.min(1, frac||0));
+  };
+  const paint = ()=>{ const f=curFrac(); fill.style.clipPath='inset(0 '+((1-f)*100)+'% 0 0)'; if(a.currentTime>0) time.textContent=fmt(a.currentTime); };
+  // 60fps animation loop while playing → smooth green fill.
+  const loop = ()=>{ if(a.paused || a.ended){ raf=0; return; } paint(); raf=requestAnimationFrame(loop); };
+  const startLoop = ()=>{ if(!raf) raf=requestAnimationFrame(loop); };
+  const stopLoop = ()=>{ if(raf){ cancelAnimationFrame(raf); raf=0; } };
+
   a.addEventListener('loadedmetadata',()=>{
     if(isFinite(a.duration) && a.duration>0){ setDur(a.duration); }
     else if(!seekFixing){ seekFixing=true; try{ a.currentTime=1e101; }catch(e){} }
   });
   a.addEventListener('durationchange',()=>{ if(isFinite(a.duration) && a.duration>0) setDur(a.duration); });
-  a.addEventListener('seeked',()=>{ if(seekFixing){ seekFixing=false; setDur(a.duration); try{ a.currentTime=0; }catch(e){} paint(); } });
-  const paint = ()=>{
-    let frac;
-    if(durKnown && dur>0){ frac=a.currentTime/dur; }
-    else { estMax=Math.max(estMax, a.currentTime, 1); frac=a.currentTime/(estMax*1.15); } // fallback: still advances
-    frac=Math.max(0, Math.min(1, frac||0));
-    const upto=Math.round(frac*N);
-    for(let i=0;i<N;i++) bars[i].classList.toggle('played', i<upto);
-  };
-  a.addEventListener('timeupdate',()=>{ if(seekFixing) return; paint(); if(a.currentTime>0) time.textContent=fmt(a.currentTime); });
-  // Global play-count so recording is blocked while a note plays (existing behavior).
-  a.addEventListener('play',()=>{ btn.textContent='\u23F8'; window.__wcAudioPlaying=(window.__wcAudioPlaying||0)+1; }); // ⏸
-  const onStop=()=>{ btn.textContent='\u25B6'; window.__wcAudioPlaying=Math.max(0,(window.__wcAudioPlaying||1)-1); };
+  a.addEventListener('seeked',()=>{ if(seekFixing){ seekFixing=false; setDur(a.duration); try{ a.currentTime=0; }catch(e){} } paint(); });
+  a.addEventListener('play',()=>{ btn.textContent='\u23F8'; window.__wcAudioPlaying=(window.__wcAudioPlaying||0)+1; startLoop(); });
+  const onStop=()=>{ btn.textContent='\u25B6'; window.__wcAudioPlaying=Math.max(0,(window.__wcAudioPlaying||1)-1); stopLoop(); paint(); };
   a.addEventListener('pause',onStop);
-  a.addEventListener('ended',()=>{ onStop(); a.currentTime=0; paint(); if(isFinite(a.duration)) time.textContent=fmt(a.duration); });
+  a.addEventListener('ended',()=>{ stopLoop(); onStop(); a.currentTime=0; fill.style.clipPath='inset(0 100% 0 0)'; if(isFinite(a.duration)) time.textContent=fmt(a.duration); });
   btn.onclick=()=>{ if(a.paused){ a.play().catch(()=>{}); } else { a.pause(); } };
   // Seek by clicking the waveform.
   wave.onclick=(e)=>{ const r=wave.getBoundingClientRect(); const frac=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));
-    if(a.duration){ a.currentTime=frac*a.duration; paint(); } };
+    if(a.duration && isFinite(a.duration)){ a.currentTime=frac*a.duration; } else { estMax=Math.max(estMax,1); a.currentTime=frac*estMax; }
+    paint(); };
   wrap.appendChild(a);
   return wrap;
 }
